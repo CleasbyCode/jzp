@@ -44,9 +44,9 @@ $
 
 ```
 To get access to and extract your embedded data file(s) using Linux, just rename the *.jpg* file extension  
-to *.zip*, and then from the Linux desktop, click the file icon to open/extract the ZIP contents. 
+to *.zip*, and then from the Linux desktop, click the file icon to open & extract the ZIP contents. 
 
-Second Linux option. From the terminal, use the commands:
+Second Linux option. From the terminal, use the following commands:
 
 ```c 
  $ zip -FF your_image.jpg --out extract.zip
