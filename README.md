@@ -5,10 +5,11 @@ Twitter will strip out metadata from your *JPG* image file when posted on its pl
 ***twexif*** is a simple command line tool that enables you to insert tiny files / metadata (up to 10KB)  
 into your *JPG* image file which Twitter will preserve.
 
-For this program and to also maximise the amount of data you can insert,   
+For this program, and to also maximise the amount of data you can insert,   
 you need to compress your file(s) into a *ZIP* archive.
 
-*(If you want to embed more data into an image file for Twitter (up to 5MB) then please use [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only)).*
+*If you need to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only).*
+*if you want to embed your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt]((https://github.com/CleasbyCode/imgprmt)*
 
 ***twexif*** works on Linux and Windows.  
 
@@ -61,7 +62,8 @@ From Windows, first rename the *.jpg* file extension to *.zip*, then from a Wind
 
 My other programs you may find useful:-  
 
-* [pdvzip - PNG Data Vehicle (ZIP Edition) for Compatible Social Media & Image Hosting Sites.](https://github.com/CleasbyCode/pdvzip)  
+* [pdvzip - PNG Data Vehicle (ZIP Edition) for Compatible Social Media & Image Hosting Sites.](https://github.com/CleasbyCode/pdvzip)
+* [imgprmt - Embed image prompts as a basic HTML page within a JPG image file](https://github.com/CleasbyCode/imgprmt)
 * [jdvrif - JPG Data Vehicle for Reddit, Imgur, Flickr & Other Compatible Social Media / Image Hosting Sites.](https://github.com/CleasbyCode/jdvrif)
 * [pdvrdt - PNG Data Vehicle for Reddit](https://github.com/CleasbyCode/pdvrdt)  
 * [pdvps - PNG Data Vehicle for Twitter, PowerShell Edition](https://github.com/CleasbyCode/pdvps)   
