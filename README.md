@@ -9,7 +9,8 @@ For this program, and to also maximise the amount of data you can insert,
 you need to compress your file(s) into a *ZIP* archive.
 
 *If you need to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only).*  
-*if you want to embed your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt]((https://github.com/CleasbyCode/imgprmt)*
+
+*if you want to embed your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)*
 
 ***twexif*** works on Linux and Windows.  
 
