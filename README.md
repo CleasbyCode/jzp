@@ -13,7 +13,7 @@ or you want to save your AI image prompts into a JPG image file (tweetable & vie
 
 ***twexif*** works on Linux and Windows.  
 
-Your data file is stored within the *ICC Profile* of the *JPG* image file.
+Your *ZIP* file is stored within the *ICC Profile* of the *JPG* image file.
 
 **Video Demos**  
 
