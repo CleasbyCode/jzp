@@ -2,7 +2,7 @@
 
 Twitter will strip out metadata from your JPG image file when posted on its platform.
 
-*twexif* is a simple command line tool allows you to insert tiny files / metadata (up to 10KB)
+*twexif* is a simple command line tool that enables you to insert tiny files / metadata (up to 10KB)
 into your image file (jpg) which Twitter will preserve.
 
 To maximise the amount of data you can embed, compress your file(s) into a ZIP archive.
