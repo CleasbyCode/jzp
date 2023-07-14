@@ -59,7 +59,7 @@ Third Linux option, if you have problems with the second option.
  $ 7z e your_image.jpg
 ```
 
-From Windows, first rename the *.jpg* file extension to *.zip*, then from a Windows console type the command: 
+From Windows, first rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
 ```c
  PS C:\Demo> Expand-Archive  your_image.zip 
 ```
