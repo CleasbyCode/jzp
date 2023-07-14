@@ -43,8 +43,8 @@ $ ./twexif  image.jpg  my_source_code.zip
 $
 
 ```
-To get access to and extract your embedded data file(s) using Linux, just rename the *.jpg* file extension to *.zip* and
-from the Linux Desktop, click the file icon to open/extract the ZIP contents. 
+To get access to and extract your embedded data file(s) using Linux, just rename the *.jpg* file extension  
+to *.zip*, and then from the Linux Desktop, click the file icon to open/extract the ZIP contents. 
 
 Second Linux option. From the terminal, use the commands:
 
