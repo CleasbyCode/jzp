@@ -1,4 +1,4 @@
-// twexif.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// twexif v1.0 for Twitter. Created by Nicholas Cleasby (CleasbyCode) 14/07/2023.
 
 #include <algorithm>
 #include <fstream>
@@ -12,7 +12,9 @@ struct jdvStruct {
 	size_t IMAGE_SIZE{}, ZIP_SIZE{};
 };
 
-// Update values, such as block size, file sizes and other values, and write them into the relevant vector/array index locations. Overwrites previous values.
+// Update values, such as Profile size, file sizes, offsets and other values, and write them into the relevant vector index locations.
+// Overwrites previous values.
+
 class ValueUpdater {
 public:
 	void Value(std::vector<unsigned char>& vec, size_t valueInsertIndex, const size_t VALUE, unsigned short bits, bool isBig) {
@@ -26,13 +28,13 @@ public:
 } *update;
 
 
-// Open user image & data file or Embedded image file. Display error & exit program if any file fails to open.
+// Open user image & ZIP file. Display error & exit program if any file fails to open.
 void openFiles(jdvStruct& jdv);
 
-// Adjust ZIP file offsets now that it's embedded within the PNG image, so that it remains a valid, working ZIP archive.
+// Adjust ZIP file offsets now that it's embedded within the JPG image, so that it remains a valid, working ZIP archive.
 void fixZipOffset(std::vector<unsigned char>&);
 
-// Write out to file the embedded image file or the extracted data file.
+// Write out to file the zip-embedded image file.
 void writeOutFile(jdvStruct& jdv);
 
 // Display program infomation
@@ -85,18 +87,19 @@ void openFiles(jdvStruct& jdv) {
 	readImage.seekg(0, readImage.beg),
 	readFile.seekg(0, readFile.beg);
 
-	// ZIP file size limit for Twitter just 10KB. 
+	// ZIP file size limit for Twitter.
+	// Twitter allows for only one ICC Profile, with a size limit of just 10KB.
 	const size_t MAX_FILE_SIZE = 10000;
 
 	if (jdv.ZIP_SIZE > MAX_FILE_SIZE) {
 	// File size check failure, display error message and exit program.
-			std::cerr << "\nFile Size Error:\n\n  Your ZIP file size [" << jdv.ZIP_SIZE << " Bytes] must not exceed 10KB.\n\n";
-			std::exit(EXIT_FAILURE);
+		std::cerr << "\nFile Size Error:\n\n  Your ZIP file size [" << jdv.ZIP_SIZE << " Bytes] must not exceed 10KB.\n\n";
+		std::exit(EXIT_FAILURE);
 	}
 
-		// The first 152 bytes of this vector contains the main (basic) ICC Profile.
-		// ZIP file will be inserted & stored at the end of this vector.
-		jdv.ProfileVec = {
+	// The first 152 bytes of this vector contains the main (basic) ICC Profile.
+	// ZIP file will be inserted & stored at the end of this vector.
+	jdv.ProfileVec = {
 		0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01,
 		0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x02, 0xF9,
 		0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00,
@@ -112,58 +115,58 @@ void openFiles(jdvStruct& jdv) {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x00, 0x00
-		};
+	};
 
-		// Read-in and store JPG image file into vector "ImageVec".
-		jdv.ImageVec.resize(jdv.IMAGE_SIZE / sizeof(unsigned char));
-		readImage.read((char*)jdv.ImageVec.data(), jdv.IMAGE_SIZE);
+	// Read-in and store JPG image file into vector "ImageVec".
+	jdv.ImageVec.resize(jdv.IMAGE_SIZE / sizeof(unsigned char));
+	readImage.read((char*)jdv.ImageVec.data(), jdv.IMAGE_SIZE);
 
-		// Read-in and store user's data file into vector "ZipVec".
-		jdv.ProfileVec.resize(jdv.ZIP_SIZE + jdv.ProfileVec.size() / sizeof(unsigned char));
-		readFile.read((char*)&jdv.ProfileVec[170], jdv.ZIP_SIZE);
+	// Read-in and store user's ZIP file at the end of vector "ProfileVec".
+	jdv.ProfileVec.resize(jdv.ZIP_SIZE + jdv.ProfileVec.size() / sizeof(unsigned char));
+	readFile.read((char*)&jdv.ProfileVec[170], jdv.ZIP_SIZE);
 
-		const std::string
-			JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
-			ZIP_SIG = "PK\x03\x04",		// ZIP file signature
-			JPG_CHECK{ jdv.ImageVec.begin(), jdv.ImageVec.begin() + JPG_SIG.length() },					// Get image header from vector. 
-			ZIP_CHECK{ jdv.ProfileVec.begin()+170, jdv.ProfileVec.begin() + 170 + ZIP_SIG.length() };	// Get file header from vector ZipVec. }
+	const std::string
+		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
+		ZIP_SIG = "PK\x03\x04",		// ZIP file signature
+		JPG_CHECK{ jdv.ImageVec.begin(), jdv.ImageVec.begin() + JPG_SIG.length() },			// Get JPG header from vector. 
+		ZIP_CHECK{ jdv.ProfileVec.begin()+170, jdv.ProfileVec.begin() + 170 + ZIP_SIG.length() };	// Get ZIP header from vector. }
 
-		// Make sure we are dealing with valid JPG & ZIP files.
-		if (JPG_CHECK != JPG_SIG || ZIP_CHECK != ZIP_SIG) {
+	// Make sure we are dealing with valid JPG & ZIP files.
+	if (JPG_CHECK != JPG_SIG || ZIP_CHECK != ZIP_SIG) {
 			
-			const std::string
-				HEADER_ERR_MSG = "Format Error: File does not appear to be a valid",
-				ERR_MSG = JPG_CHECK != JPG_SIG ? "\nJPG " + HEADER_ERR_MSG + " JPG image.\n\n"
-				: "\nZIP " + HEADER_ERR_MSG + " ZIP archive.\n\n";
+		const std::string
+			HEADER_ERR_MSG = "Format Error: File does not appear to be a valid",
+			ERR_MSG = JPG_CHECK != JPG_SIG ? "\nJPG " + HEADER_ERR_MSG + " JPG image.\n\n"
+			: "\nZIP " + HEADER_ERR_MSG + " ZIP archive.\n\n";
 
 			// File requirements check failure, display relevant error message and exit program.
-			std::cerr << ERR_MSG;
-			std::exit(EXIT_FAILURE);
-		}
+		std::cerr << ERR_MSG;
+		std::exit(EXIT_FAILURE);
+	}
 
-		// Signature for Define Quantization Table(s) 
-		const auto DQT_SIG = { 0xFF, 0xDB };
+	// Signature for Define Quantization Table(s) 
+	const auto DQT_SIG = { 0xFF, 0xDB };
 
-		// Find location in vector "ImageVec" of first DQT index location of the image file.
-		const size_t DQT_POS = search(jdv.ImageVec.begin(), jdv.ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - jdv.ImageVec.begin();
+	// Find location in vector "ImageVec" of first DQT index location of the image file.
+	const size_t DQT_POS = search(jdv.ImageVec.begin(), jdv.ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - jdv.ImageVec.begin();
 
-		// Erase the first n bytes of the JPG header before this DQT position. We later replace the erased header with the contents of vector "ProfileVec".
-		jdv.ImageVec.erase(jdv.ImageVec.begin(), jdv.ImageVec.begin() + DQT_POS);
+	// Erase the first n bytes of the JPG header before this DQT position. We later replace the erased header with the contents of vector "ProfileVec".
+	jdv.ImageVec.erase(jdv.ImageVec.begin(), jdv.ImageVec.begin() + DQT_POS);
 
 	unsigned short int
-		bits = 16,							// Variable used with the "updateValue" function. Two bytes max for ICC Profile size.
-		profileMainBlockSizeIndex = 22;		// "ProfileVec" start index location for the 2 byte block size field.
+		bits = 16,			// Variable used with the "updateValue" function. Two bytes max for ICC Profile size.
+		profileMainBlockSizeIndex = 22;	// "ProfileVec" start index location for the 2 byte block size field.
 
 	const size_t
-		VECTOR_SIZE = jdv.ProfileVec.size() - profileMainBlockSizeIndex;	// Get updated size for vector "ProfileVec" after adding user's data file.
+		VECTOR_SIZE = jdv.ProfileVec.size() - profileMainBlockSizeIndex;	// Get updated size for vector "ProfileVec" after adding user's ZIP file.
 		
-		// Update profile block size of vector "ProfileVec", as it is smaller than the set default value (0xFFFF).
+		// Update Profile block size of vector "ProfileVec".
 		update->Value(jdv.ProfileVec, profileMainBlockSizeIndex, VECTOR_SIZE, bits, true);
 
-		// Before updating the last IDAT chunk's crc value, adjust ZIP file offsets within this chunk, as their location has now changed.
+		// Adjust ZIP file offsets within this vector, as their locations have now changed.
 		fixZipOffset(jdv.ProfileVec);
 
-		// Insert contents of vector "ProfileVec" into vector "ImageVec", combining user's data file and ICC profile header blocks, with the JPG image.	
+		// Insert contents of vector "ProfileVec" into vector "ImageVec", combining user's ICC Profile + user's ZIP file, with the JPG image.	
 		jdv.ImageVec.insert(jdv.ImageVec.begin(), jdv.ProfileVec.begin(), jdv.ProfileVec.end());
 
 		jdv.ZIP_NAME = "twexif_img.jpg";
@@ -187,10 +190,10 @@ void fixZipOffset(std::vector<unsigned char>& Vec) {
 		zipRecordsIndex = END_CENTRAL_INDEX + 11,	// Index location for ZIP file records value.
 		endCentralStartIndex = END_CENTRAL_INDEX + 19,	// Index location for End Central Start offset.
 		centralLocalIndex = START_CENTRAL_INDEX - 1,	// Initialise variable to just before Start Central index location.
-		newOffset = 168,								// Initialise variable to near location of ZIP file.
-		zipRecords = (Vec[zipRecordsIndex] << 8) | Vec[zipRecordsIndex - 1];	// Get ZIP file records value from index location of within vector.
+		newOffset = 168,							// Initialise variable to near location of ZIP file.
+		zipRecords = (Vec[zipRecordsIndex] << 8) | Vec[zipRecordsIndex - 1];	// Get ZIP file records value from index location within vector.
 
-	// Starting from the last IDAT chunk, search for ZIP file record offsets and update them to their new offset location.
+	// Search for ZIP file record offsets and update them to their new offset location.
 	while (zipRecords--) {
 		newOffset = search(Vec.begin() + newOffset + 1, Vec.end(), ZIP_SIG.begin(), ZIP_SIG.end()) - Vec.begin(),
 		centralLocalIndex = 45 + search(Vec.begin() + centralLocalIndex, Vec.end(), START_CENTRAL_SIG.begin(), START_CENTRAL_SIG.end()) - Vec.begin();
@@ -210,11 +213,10 @@ void writeOutFile(jdvStruct& jdv) {
 		std::exit(EXIT_FAILURE);
 	}
 	
-	// Write out to disk image file embedded with the encrypted data file.
+	// Write out to disk image file embedded ZIP file.
 	writeFile.write((char*)&jdv.ImageVec[0], jdv.ImageVec.size());
 	std::cout << "\nCreated output file: \"" + jdv.ZIP_NAME + " " << jdv.ImageVec.size() << " " << "Bytes\"\n"
 		<< "You can now tweet this image.\n\n";
-	
 }
 
 void displayInfo() {
