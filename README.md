@@ -1,6 +1,6 @@
 # twexif
 
-Twitter will strip out metadata from your JPG images posted on its platform.
+Twitter will strip out metadata from your JPG image file when posted on its platform.
 
 *twexif* is a simple command line tool allows you to insert tiny files / metadata (up to 10KB)
 into your image file (jpg) which Twitter will preserve.
