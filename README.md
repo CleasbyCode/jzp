@@ -5,12 +5,12 @@ Twitter will strip out metadata from your *JPG* image file when posted on its pl
 ***twexif*** is a simple command line tool that enables you to insert tiny files / metadata (up to 10KB)  
 into your *JPG* image file which Twitter will preserve.
 
-For this program, and to also maximise the amount of data you can insert,   
-you need to compress your file(s) into a *ZIP* archive.
+For this program, and to also maximise the amount of data you can insert, you need to compress  
+your file(s) into a *ZIP* archive.
 
-*If you need to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only).*  
+*(If you need to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only).*  
 
-*if you want to embed your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)*
+*if you want to embed your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt))*
 
 ***twexif*** works on Linux and Windows.  
 
