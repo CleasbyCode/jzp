@@ -32,8 +32,8 @@ $ g++ twexif.cpp -s -o twexif
 $
 $ ./twexif
 
-Usage:  twexif <jpg_image>  <zip_file>
-        twexif --info
+Usage:  twexif  <jpg_image>  <zip_file>
+        twexif  --info
 
 $ ./twexif  image.jpg  my_source_code.zip
 
