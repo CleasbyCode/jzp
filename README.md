@@ -44,17 +44,17 @@ $ ./twexif  image.jpg  my_source_code.zip
 $
 
 ```
-First Linux option. To get access to and extract your embedded data file(s) using Linux, just rename the *.jpg* file extension  
+***First*** Linux option. To get access to and extract your embedded data file(s) using Linux, just rename the *.jpg* file extension  
 to *.zip*, and then from the Linux desktop, click the file icon to open & extract the ZIP contents. 
 
-Second Linux option. From the terminal, use the following commands:
+***Second*** Linux option. From the terminal, use the following commands:
 
 ```c 
  $ zip -FF your_image.jpg --out extract.zip
  $ unzip extract.zip
 ```
 
-Third Linux option, if you have problems with the first and second options.
+***Third*** Linux option, if you have problems with the first and second options.
 
 ```c
  $ 7z e your_image.jpg
