@@ -9,7 +9,7 @@ For this program, and to also maximise the amount of data you can insert, you ne
 your file(s) into a *ZIP* archive.
 
 *(If you need to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only),  
-or if you want to save your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt))*
+or if you want to save your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)).*
 
 ***twexif*** works on Linux and Windows.  
 
@@ -46,34 +46,34 @@ $
 ```
 ## Extracting Your Embedded File(s)
 
-***First*** Linux option. To get access to and extract your embedded data file(s) using Linux, just rename  
+***First Linux*** option. To get access to and extract your embedded data file(s) using Linux, just rename  
 the *.jpg* file extension to *.zip*, and then from the Linux desktop, click the file icon to open & extract the ZIP contents. 
 
-***Second*** Linux option. From the terminal, use the following commands:
+***Second Linux*** option. From the terminal, use the following commands:
 
 ```c 
  $ zip -FF your_image.jpg --out extract.zip
  $ unzip extract.zip
 ```
 
-***Third*** Linux option, if you have problems with the first and second options.
+***Third Linux option***, if you have problems with the first and second options.
 
 ```c
  $ 7z e your_image.jpg
 ```
 
-***First*** Windows option. Rename the *.jpg* file extension to *.cmd*, then from a console type the following command: 
+***First Windows option***. Rename the *.jpg* file extension to *.cmd*, then from a console type the following command: 
 
 ```c
- PS C:\Demo> .\your_image.zip 
+ PS C:\Demo> .\your_image.cmd 
 ```
 You can also open the *.cmd* file from the Windows desktop, but you will get a secruity warning on its first run.  
 Clear the warning by clicking '***More info***' then select '***Run anyway***'.  
 
-***Second*** Windows option. Rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
+***Second Windows*** option. Rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
 
 ```c
- PS C:\Demo> Expand-Archive  your_image.zip 
+ PS C:\Demo> Expand-Archive  .\your_image.zip 
 ```
 
 My other programs you may find useful:-  
