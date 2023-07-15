@@ -14,7 +14,7 @@ or if you want to save your AI image prompts into a JPG image file (tweetable & 
 ***twexif*** works on Linux and Windows.  
 
 Your *ZIP* file is stored within the *ICC Profile* of the *JPG* image file.  
-*Twitter only allows for one ICC Profile with a maximum size of 10KB.*
+*Twitter allows for only one ICC Profile with a maximum size of 10KB.*
 
 ![Profile_Image](https://github.com/CleasbyCode/twexif/blob/main/demo_image/profile.png)  
 
