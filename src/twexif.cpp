@@ -239,17 +239,23 @@ Created output file: "twexif_img.jpg 199856 Bytes"
 You can now tweet this image.
 ****
 
-To get access to and extract your embedded data file(s) using Linux, 
+For Linux, to get access to and extract your embedded data file(s), 
 just rename the .jpg file extension to .zip, and then from the Linux desktop,
 click the file icon to open & extract the ZIP contents.
 
-For Windows, first rename the .jpg file extension to .zip, 
+For Windows, first option. Rename the .jpg file extension to .cmd, 
 then from a console type the following command:
 
 ****
-PS C:\Demo> Expand-Archive  your_twexif_image.zip
+PS C:\Demo> .\your_twexif_image.cmd
 ****
 
+Second option for Windows. Rename the .jpg file extension to .zip,
+then from a console type the following command:
+
+****
+PS C:\Demo> Expand-Archive .\your_twexif_image.zip
+****
 
 )";
 }
