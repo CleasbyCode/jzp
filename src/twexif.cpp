@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 		openFiles(jdv);
 	}
 	else {
-		std::cout << "\nUsage:\t\btwexif <jpg_image>  <zip_file>\n\t\btwexif --info\n\n";
+		std::cout << "\nUsage:\t\b twexif  <jpg_image>  <zip_file>\n\t\b twexif  --info\n\n";
 	}
 	return 0;
 }
