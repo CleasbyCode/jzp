@@ -20,8 +20,8 @@ Your *ZIP* file is stored within the *ICC Profile* of the *JPG* image file.
 
 **Video Demos**  
 
-* [***Windows Example***](https://youtu.be/vrb-cRl34LI)
-* [***Linux Example***](https://youtu.be/jAH-Ru3l57o)
+* [***Windows Example***](https://youtu.be/hBupOu7fbfo)
+* [***Linux Example***](https://youtu.be/BfvwBWeAfzM)
   
 Compile and run the program under Windows or **Linux**  
 
