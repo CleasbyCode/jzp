@@ -62,7 +62,16 @@ the *.jpg* file extension to *.zip*, and then from the Linux desktop, click the 
  $ 7z e your_image.jpg
 ```
 
-For Windows, first rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
+***First*** Windows option. Rename the *.jpg* file extension to *.cmd*, then from a console type the following command: 
+
+```c
+ PS C:\Demo> .\your_image.zip 
+```
+You can also open the *.cmd* file from the Windows desktop, but you will get a secruity warning on its first run.  
+Clear the warning by clicking '***More info***' then select '***Run anyway***'.  
+
+***Second*** Windows option. Rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
+
 ```c
  PS C:\Demo> Expand-Archive  your_image.zip 
 ```
