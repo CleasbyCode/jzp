@@ -1,20 +1,19 @@
-# twexif
+# Xif
 
 ***Twitter*** will strip out metadata from your *JPG* image file when posted on its platform.
 
-***twexif*** is a simple command line tool that enables you to insert tiny files / metadata (up to 10KB)  
-into your *JPG* image file which Twitter will preserve.
+***xif*** is a command line tool that enables you to insert tiny files (up 10KB) into your *JPG* 
+image file inwhich Twitter will preserve, so your data file travels with the image.
 
-For this program, and to also maximise the amount of data you can insert, you need to compress  
-your file(s) into a *ZIP* archive.
+To maximise the amount of data you can embed, it is recommended to compress (ZIP/RAR, etc) your file.
 
 *(If you want to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only),  
 or if you want to save your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)).*
 
-***twexif*** works on Linux and Windows.  
+***xif*** works on Linux and Windows.  
 
-Your *ZIP* file is stored within the *ICC Profile* of the *JPG* image file.  
-*Twitter allows for only one ICC Profile with a maximum size of 10KB.*
+Your embedded file is stored within the *iCC Profile* of the *JPG* image file.  
+*Twitter allows for only one iCC Profile with a maximum size of 10KB.*
 
 **Video Demos**  
 
@@ -27,16 +26,16 @@ Compile and run the program under Windows or **Linux**
 
 ```c
 
-$ g++ twexif.cpp -s -o twexif
+$ g++ xif.cpp -s -o xif
 $
-$ ./twexif
+$ ./xif
 
-Usage:  twexif  <jpg_image>  <zip_file>
-        twexif  --info
+Usage:  xif  <jpg_image>  <data_file>
+        xif  --info
 
-$ ./twexif  image.jpg  my_source_code.zip
+$ ./xif  image.jpg  my_source_code.rar
 
- Created output file: "twexif_img.jpg 199856 Bytes"
+ Created output file: "xif_img.jpg 9256 Bytes"
  You can now tweet this image.
 
 $
