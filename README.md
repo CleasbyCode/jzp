@@ -43,29 +43,14 @@ $
 ```
 ## Extracting Your Embedded File(s)
 
-***First Linux*** option. To get access to and extract your embedded data file(s) using Linux, just rename the *.jpg*  
-file extension to *.zip*, and then from the Linux desktop, click the file icon to open & extract the ZIP contents. 
+To get access to and extract your embedded data file for a ***ZIP*** or ***RAR*** embedded file under **Linux Desktop**, just rename 
+the ***.jpg*** file extension to ***.zip***, then click the file icon to open & extract the ***ZIP/RAR*** contents.
 
-***Second Linux*** option. From the terminal, use the following commands:
+For just a ***RAR*** file under Linux, you don't need to rename the file extension. From a Linux terminal enter the following command.
 
 ```c 
- $ zip -FF your_image.jpg --out extract.zip
- $ unzip extract.zip
+ $ unrar e xif_img.jpg
 ```
-
-***Third Linux option***, if you have problems with the first and second options.
-
-```c
- $ 7z e your_image.jpg
-```
-
-***First Windows option***. Rename the *.jpg* file extension to *.cmd*, then from a console type the following command: 
-
-```c
- PS C:\Demo> .\your_image.cmd 
-```
-You can also open the *.cmd* file from the Windows desktop, but you will get a secruity warning on its first run.  
-Clear the warning by clicking '***More info***' then select '***Run anyway***'.  
 
 ***Second Windows*** option. Rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
 
