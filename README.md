@@ -1,4 +1,4 @@
-# Xif
+# xif
 
 **Twitter** will strip out metadata from your ***JPG*** image file when posted on its platform.
 
