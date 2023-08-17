@@ -46,17 +46,18 @@ $
 To get access to and extract your embedded data file for a ***ZIP*** or ***RAR*** embedded file under **Linux Desktop**, just rename 
 the ***.jpg*** file extension to ***.zip***, then click the file icon to open & extract the ***ZIP/RAR*** contents.
 
-For just a ***RAR*** file under Linux, you don't need to rename the file extension. From a Linux terminal enter the following command.
+For just a ***RAR*** file under Linux, you don't need to rename the file extension. From a Linux terminal enter the following command:
 
 ```c 
  $ unrar e xif_img.jpg
 ```
-
-***Second Windows*** option. Rename the *.jpg* file extension to *.zip*, then from a console type the following command: 
+For an embedded ***ZIP*** file under **Windows**. Rename the ***.jpg*** file extension to ***.zip***. From a command console type the following command:
 
 ```c
- PS C:\Demo> Expand-Archive  .\your_image.zip 
+ PS C:\Demo> Expand-Archive  .\xif_img.zip 
 ```
+For a ***RAR*** file under **Windows**, you will need to use a program such as **WinRar** to extract your file from the image.
+
 
 My other programs you may find useful:-  
 
