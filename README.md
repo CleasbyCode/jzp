@@ -13,7 +13,8 @@ or if you want to save your AI image prompts (Midjourney) into a JPG image file 
 **xif** works on **Linux** and **Windows**.  
 
 Your embedded file is stored within the ***iCC Profile*** of the ***JPG*** image file.  
-*Twitter allows for only one iCC Profile with a maximum size of 10KB.*
+*Twitter allows for only one iCC Profile with a maximum size of 10KB.*  
+![Demo Image](https://github.com/CleasbyCode/xif/blob/main/demo_images/icc.png)  
 
 **Video Demos**  
 
