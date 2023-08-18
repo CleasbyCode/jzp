@@ -54,7 +54,7 @@ For just a ***RAR*** file under **Linux**, you don't need to rename the file ext
  $ unrar e xif_img.jpg
 ```
 
-For an embedded ***ZIP*** file under **Windows**. Rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
+For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
 
 ```c
  PS C:\Demo> Expand-Archive  .\xif_img.zip 
