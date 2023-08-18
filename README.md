@@ -43,7 +43,7 @@ $
 ```
 ## Extracting Your Embedded File(s)
 
-To get access to and extract your embedded data file for a ***ZIP*** or ***RAR*** embedded file under **Linux Desktop**, just rename 
+To get access to and extract your data file for a ***ZIP*** or ***RAR*** embedded file under **Linux Desktop**, just rename 
 the ***.jpg*** file extension to ***.zip***, then click the file icon to open & extract the ***ZIP/RAR*** contents.
 
 For just a ***RAR*** file under **Linux**, you don't need to rename the file extension. From a **Linux** terminal enter the following command:
