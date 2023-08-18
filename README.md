@@ -18,7 +18,7 @@ Your embedded file is stored within the ***iCC Profile*** of the ***JPG*** image
 **Video Demos**  
 
 * [***Linux Example (RAR File)***](https://youtu.be/b9vgvgdYdVo)
-* [***Windows Exammple (ZIP File)***](https://youtu.be/e6scfpxpCbY)
+* [***Windows Example (ZIP File)***](https://youtu.be/e6scfpxpCbY)
   
 Compile and run the program under **Windows** or **Linux**  
 
