@@ -8,7 +8,7 @@ in which **Twitter** will preserve, so that your data file ***"travels"*** with 
 To maximise the amount of data you can embed, it is recommended to compress (***ZIP/RAR***, etc) your file.
 
 *(If you want to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only),  
-or if you want to save your AI image prompts into a JPG image file (tweetable & viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)).*
+or if you want to save your AI image prompts (Midjourney) into a JPG image file (viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)).*
 
 **xif** works on **Linux** and **Windows**.  
 
@@ -17,8 +17,8 @@ Your embedded file is stored within the ***iCC Profile*** of the ***JPG*** image
 
 **Video Demos**  
 
-* [***Windows Example***](https://youtu.be/hBupOu7fbfo)
-* [***Linux Example***](https://youtu.be/BfvwBWeAfzM)
+* [***Linux Example (RAR File)***](https://youtu.be/b9vgvgdYdVo)
+* [***Windows Exammple (ZIP File)***](https://youtu.be/e6scfpxpCbY)
   
 Compile and run the program under **Windows** or **Linux**  
 
