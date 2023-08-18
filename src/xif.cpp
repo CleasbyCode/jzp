@@ -155,7 +155,7 @@ void openFiles(xifStruct& xif) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	const std::string
+	const std::string // Header IDs
 		EXIF_SIG = "Exif\x00\x00II",
 		EXIF_END_SIG = "xpacket end",
 		ICC_PROFILE_SIG = "ICC_PROFILE";
@@ -225,7 +225,7 @@ void openFiles(xifStruct& xif) {
 
 void fixZipOffset(xifStruct& xif) {
 
-	const std::string	// Header ID's
+	const std::string	// Header IDs
 		START_CENTRAL_SIG = "PK\x01\x02",
 		END_CENTRAL_SIG = "PK\x05\x06",
 		ZIP_SIG = "PK\x03\x04";
