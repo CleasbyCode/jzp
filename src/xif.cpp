@@ -105,7 +105,7 @@ void openFiles(xifStruct& xif) {
 	xif.ProfileVec = {
 		0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01,
 		0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x0E, 0x8C, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46,
-		0x49, 0x4C, 0x45, 0x00, 0x01, 0x01,	0x00, 0x00, 0x00, 0x00, 0x6c, 0x63, 0x6d, 0x73, 0x02, 0x10,
+		0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x6c, 0x63, 0x6d, 0x73, 0x02, 0x10,
 		0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE2,
 		0x00, 0x03, 0x00, 0x14, 0x00, 0x09, 0x00, 0x0E, 0x00, 0x1D, 0x61, 0x63, 0x73, 0x70, 0x4D, 0x53,
 		0x46, 0x54, 0x00, 0x00, 0x00, 0x00, 0x73, 0x61, 0x77, 0x73, 0x63, 0x74, 0x72, 0x6C, 0x00, 0x00,
@@ -145,7 +145,7 @@ void openFiles(xifStruct& xif) {
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
 		ZIP_SIG = "PK\x03\x04",		// ZIP file signature
 		JPG_CHECK{ xif.ImageVec.begin(), xif.ImageVec.begin() + JPG_SIG.length() },															                            // Get JPG image header from vector. 
-		ZIP_CHECK{ xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION, xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION + ZIP_SIG.length() };	  // Get ZIP header from vector.
+		ZIP_CHECK{ xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION, xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION + ZIP_SIG.length() };	// Get ZIP header from vector.
 
 	// Make sure we are dealing with valid JPG image file.
 	if (JPG_CHECK != JPG_SIG) {
@@ -195,9 +195,9 @@ void openFiles(xifStruct& xif) {
 	xif.ImageVec.erase(xif.ImageVec.begin(), xif.ImageVec.begin() + DQT_POS);
 
 	SBYTE
-		Bits = 16,								              // Variable used with the "updateValue" function.
-		Profile_Header_Size_Field_Index = 22,	  // "ProfileVec" first index location for the 2 byte iCC Profile (header) length field, of the jpg image.
-		Profile_Main_Size_Field_Index = 38;		  // "ProfileVec" second index location for the 4 byte iCC Profile (main) length field, of the jpg image (only 2 bytes used).
+		Bits = 16,				// Variable used with the "updateValue" function.
+		Profile_Header_Size_Field_Index = 22,	// "ProfileVec" first index location for the 2 byte iCC Profile (header) length field, of the jpg image.
+		Profile_Main_Size_Field_Index = 38;	// "ProfileVec" second index location for the 4 byte iCC Profile (main) length field, of the jpg image (only 2 bytes used).
 
 	const size_t
 		VECTOR_SIZE = xif.ProfileVec.size() - Profile_Header_Size_Field_Index;	// Get updated size for vector "ProfileVec" after adding user's data file.
@@ -236,10 +236,10 @@ void fixZipOffset(xifStruct& xif) {
 		END_CENTRAL_INDEX = search(xif.ProfileVec.begin() + START_CENTRAL_INDEX, xif.ProfileVec.end(), END_CENTRAL_SIG.begin(), END_CENTRAL_SIG.end()) - xif.ProfileVec.begin();
 
 	size_t
-		Zip_Records_Index = END_CENTRAL_INDEX + 11,		  	// Index location for ZIP file records value.
+		Zip_Records_Index = END_CENTRAL_INDEX + 11,		// Index location for ZIP file records value.
 		End_Central_Start_Index = END_CENTRAL_INDEX + 19,	// Index location for End Central Start offset.
 		Central_Local_Index = START_CENTRAL_INDEX - 1,		// Initialise variable to just before Start Central index location.
-		New_Offset = xif.DATA_FILE_LOCATION - 1,				  // Initialise variable to near location of ZIP file.
+		New_Offset = xif.DATA_FILE_LOCATION - 1,		// Initialise variable to near location of ZIP file.
 		Zip_Records = (xif.ProfileVec[Zip_Records_Index] << 8) | xif.ProfileVec[Zip_Records_Index - 1];	// Get ZIP file records value from index location within vector.
 
 	// Starting from the last IDAT chunk, search for ZIP file record offsets and update them to their new offset location.
