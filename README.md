@@ -5,7 +5,9 @@
 **xif** is a command line tool that enables you to insert tiny files (up 10KB) into your ***JPG*** image file  
 in which **Twitter** will preserve, so that your data file ***"travels"*** with the image.
 
-To maximise the amount of data you can embed, it is recommended to compress (***ZIP/RAR***, etc) your file.
+To maximise the amount of data you can embed, it is recommended to compress (***ZIP/RAR***, etc) your file.  
+
+![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/F4TBIQSXYAAHqSc.jpg) 
 
 *(If you want to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only),  
 or if you want to save your AI image prompts (Midjourney) into a JPG image file (viewable as a basic web page), then please try [imgprmt](https://github.com/CleasbyCode/imgprmt)).*
@@ -15,7 +17,7 @@ or if you want to save your AI image prompts (Midjourney) into a JPG image file 
 Your embedded file is stored within the ***iCC Profile*** of the ***JPG*** image file.  
 *Twitter allows for only one iCC Profile with a maximum size of 10KB.* 
 
-![Demo Image](https://github.com/CleasbyCode/xif/blob/main/demo_image/icc_dem.png)  
+![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/icc_dem.png)  
 
 **Video Demos**  
 
@@ -57,7 +59,7 @@ For just a ***RAR*** file under **Linux**, you don't need to rename the file ext
 For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
 
 ```c
- PS C:\Demo> Expand-Archive  .\xif_img.zip 
+ PS C:\Demo> Expand-Archive  .\xif_img.zip .
 ```
 For a ***RAR*** file under **Windows**, you will need to use a program such as **WinRar** to extract your file from the image.
 
