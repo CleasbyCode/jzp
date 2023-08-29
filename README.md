@@ -2,10 +2,10 @@
 
 **Twitter** will strip out metadata from your image file when posted on its platform.
 
-**xif** is a command line tool that enables you to insert tiny files (up 10KB) into your ***JPG*** image file  
-in which **Twitter** will preserve, so that your data file ***"travels"*** with the image.
+**xif** is a simple CLI tool that enables you to insert small files (up 10KB) into a ***JPG*** image file,  
+in which **Twitter** will retain, so that your data file ***"travels"*** with the image.
 
-To maximise the amount of data you can embed, it is recommended to compress (***ZIP/RAR***, etc) your file.  
+To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***, etc) your file.  
 
 ![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/F4TBIQSXYAAHqSc.jpg) 
 
