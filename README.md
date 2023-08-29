@@ -18,6 +18,7 @@ Your embedded file is stored within the ***iCC Profile*** of the ***JPG*** image
 *Twitter allows for only one iCC Profile with a maximum size of 10KB.* 
 
 ![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/icc_dem.png)  
+***[Original image source](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
 
 **Video Demos**  
 
