@@ -131,7 +131,7 @@ void openFiles(xifStruct& xif) {
 	xif.ImageVec.assign(std::istreambuf_iterator<char>(readImage), std::istreambuf_iterator<char>());
 
 	// Read-in and store user's data file into vector "ProfileVec" at the end of the basic profile.
-	xif.ProfileVec.insert(xif.ProfileVec.begin() + 443, std::istreambuf_iterator<char>(readData), std::istreambuf_iterator<char>());
+	xif.ProfileVec.insert(xif.ProfileVec.end(), std::istreambuf_iterator<char>(readData), std::istreambuf_iterator<char>());
 
 	const std::string
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
