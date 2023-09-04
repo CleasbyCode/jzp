@@ -10,16 +10,9 @@
 #include <vector>
 #include <filesystem>
 
-namespace fs = std::filesystem;
+namespace fs = std::filesystem; // C++ 17 or later required for "filesystem".
 
 typedef unsigned char BYTE;
-
-struct xifStruct {
-	std::vector<BYTE> ImageVec, ProfileVec;
-	std::string Image_Name, Data_Name;
-	size_t Image_Size{}, Data_Size{};
-	const int DATA_FILE_LOCATION = 443;
-};
 
 // Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
 class ValueUpdater {
@@ -34,29 +27,23 @@ public:
 	}
 } *update;
 
-// Open user image & data file. Display error & exit program if any file fails to open.
-void openFiles(xifStruct& xif);
-
-// So that it remains a valid, working ZIP archive, adjust ZIP file offsets now that it's embedded in a different location within the image file. 
-void fixZipOffset(xifStruct& xif);
-
-// Write out to file the embedded image file.
-void writeOutFile(xifStruct& xif);
+// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
+void embedFile(const std::string&, const std::string&);
 
 // Display program information
 void displayInfo();
 
 int main(int argc, char** argv) {
 
-	xifStruct xif;
-
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
 	}
 	else if (argc > 2 && argc < 4) {
-		xif.Image_Name = argv[1];
-		xif.Data_Name = argv[2];
-		openFiles(xif);
+		const std::string 
+			IMAGE_NAME = argv[1],
+			DATA_NAME = argv[2];
+		
+		embedFile(IMAGE_NAME, DATA_NAME);
 	}
 	else {
 		std::cout << "\nUsage:\txif  <jpg_image>  <data_file>\n\txif  --info\n\n";
@@ -64,39 +51,40 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-void openFiles(xifStruct& xif) {
+void embedFile(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 	std::ifstream
-		readImage(xif.Image_Name, std::ios::binary),
-		readData(xif.Data_Name, std::ios::binary);
+		readImage(IMAGE_NAME, std::ios::binary),
+		readData(DATA_NAME, std::ios::binary);
 
 	if (!readImage || !readData) {
 		// Open file failure, display relevant error message and exit program.
 
 		const std::string READ_ERR_MSG = "\nRead Error: Unable to open/read file: ";
-		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + xif.Image_Name + "\"\n\n" : READ_ERR_MSG + "\"" + xif.Data_Name + "\"\n\n";
+		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + IMAGE_NAME + "\"\n\n" : READ_ERR_MSG + "\"" + DATA_NAME + "\"\n\n";
 
 		std::cerr << ERR_MSG;
 
 		std::exit(EXIT_FAILURE);
 	}
 
-	xif.Image_Size = fs::file_size(xif.Image_Name);
-	xif.Data_Size = fs::file_size(xif.Data_Name);
+	const size_t 
+		IMAGE_SIZE = fs::file_size(IMAGE_NAME),
+		DATA_SIZE = fs::file_size(DATA_NAME);
 
 	// Data file size limit for JPG / Twitter is 10KB. We also have to take off 443 bytes for the basic iCC Profile, 
 	// which leaves use just 9,797 bytes for the embedded file. Compressing your data file is recommended (ZIP/RAR, etc).
 	const size_t MAX_FILE_SIZE = 9797;
 
-	if (xif.Data_Size > MAX_FILE_SIZE) {
+	if (DATA_SIZE > MAX_FILE_SIZE) {
 		// File size check failure, display error message and exit program.
 		std::cerr << "\nFile Size Error: Your data file size must not exceed 10KB.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	// The first 443 bytes of this vector contains the JPG header, iCC Profile header and the main (basic) iCC Profile.
+	// The first 443 bytes of this vector contains the JPG header, iCC Profile header and the main iCC Profile.
 	// Data file will be inserted & stored at the end of this vector.
-	xif.ProfileVec = {
+	std::vector<BYTE>ProfileVec = {
 		0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01,
 		0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x0E, 0x8C, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46,
 		0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x6c, 0x63, 0x6d, 0x73, 0x02, 0x10,
@@ -125,19 +113,21 @@ void openFiles(xifStruct& xif) {
 		0x01, 0x07, 0x02, 0xB5, 0x05, 0x6B, 0x09, 0x36, 0x0E, 0x50, 0x14, 0xB1, 0x1C, 0x80, 0x25, 0xC8,
 		0x30, 0xA1, 0x3D, 0x19, 0x4B, 0x40, 0x5B, 0x27, 0x6C, 0xDB, 0x80, 0x6B, 0x95, 0xE3, 0xAD, 0x50,
 		0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x20, 0x78, 0x69, 0x66, 0x20
-	};
+	},
 
 	// Read-in and store JPG image file into vector "ImageVec".
-	xif.ImageVec.assign(std::istreambuf_iterator<char>(readImage), std::istreambuf_iterator<char>());
+	ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
 	// Read-in and store user's data file into vector "ProfileVec" at the end of the basic profile.
-	xif.ProfileVec.insert(xif.ProfileVec.end(), std::istreambuf_iterator<char>(readData), std::istreambuf_iterator<char>());
+	ProfileVec.insert(ProfileVec.end(), std::istreambuf_iterator<char>(readData), std::istreambuf_iterator<char>());
+
+	const int DATA_FILE_LOCATION = 443;
 
 	const std::string
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
 		ZIP_SIG = "PK\x03\x04",		// ZIP file signature
-		JPG_CHECK{ xif.ImageVec.begin(), xif.ImageVec.begin() + JPG_SIG.length() },															// Get JPG image header from vector. 
-		ZIP_CHECK{ xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION, xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION + ZIP_SIG.length() };	// Get ZIP header from vector.
+		JPG_CHECK{ ImageVec.begin(), ImageVec.begin() + JPG_SIG.length() },															// Get JPG image header from vector. 
+		ZIP_CHECK{ ProfileVec.begin() + DATA_FILE_LOCATION, ProfileVec.begin() + DATA_FILE_LOCATION + ZIP_SIG.length() };	// Get ZIP header from vector.
 
 	// Make sure we are dealing with valid JPG image file.
 	if (JPG_CHECK != JPG_SIG) {
@@ -152,102 +142,92 @@ void openFiles(xifStruct& xif) {
 		EXIF_END_SIG = "xpacket end",
 		ICC_PROFILE_SIG = "ICC_PROFILE";
 
-	// An embedded jpg thumbnail will cause problems with this program. So search and remove blocks that may contain a thumbnail image.
+	// An embedded JPG thumbnail will cause problems with this program. So search and remove blocks that may contain a thumbnail image.
 
 	// Check for a iCC Profile and delete all content before the beginning of the profile. This removes any embedded thumbnail image before profile.
 	// The actual profile will be deleted later.
-	const size_t ICC_PROFILE_POS = search(xif.ImageVec.begin(), xif.ImageVec.end(), ICC_PROFILE_SIG.begin(), ICC_PROFILE_SIG.end()) - xif.ImageVec.begin();
-	if (xif.ImageVec.size() > ICC_PROFILE_POS) {
-		xif.ImageVec.erase(xif.ImageVec.begin(), xif.ImageVec.begin() + ICC_PROFILE_POS);
+	const size_t ICC_PROFILE_POS = search(ImageVec.begin(), ImageVec.end(), ICC_PROFILE_SIG.begin(), ICC_PROFILE_SIG.end()) - ImageVec.begin();
+	if (ImageVec.size() > ICC_PROFILE_POS) {
+		ImageVec.erase(ImageVec.begin(), ImageVec.begin() + ICC_PROFILE_POS);
 	}
 
 	// If no profile found, search for and Exif block (look for end signature "xpacket end") and remove the block.
-	const size_t EXIF_END_POS = search(xif.ImageVec.begin(), xif.ImageVec.end(), EXIF_END_SIG.begin(), EXIF_END_SIG.end()) - xif.ImageVec.begin();
-	if (xif.ImageVec.size() > EXIF_END_POS) {
-		xif.ImageVec.erase(xif.ImageVec.begin(), xif.ImageVec.begin() + (EXIF_END_POS + 17));
+	const size_t EXIF_END_POS = search(ImageVec.begin(), ImageVec.end(), EXIF_END_SIG.begin(), EXIF_END_SIG.end()) - ImageVec.begin();
+	if (ImageVec.size() > EXIF_END_POS) {
+		ImageVec.erase(ImageVec.begin(), ImageVec.begin() + (EXIF_END_POS + 17));
 	}
 
 	// Remove and Exif block that has no "xpacket end" signature.
-	const size_t EXIF_START_POS = search(xif.ImageVec.begin(), xif.ImageVec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - xif.ImageVec.begin();
-	if (xif.ImageVec.size() > EXIF_START_POS) {
+	const size_t EXIF_START_POS = search(ImageVec.begin(), ImageVec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - ImageVec.begin();
+	if (ImageVec.size() > EXIF_START_POS) {
 		// get size of Exif block
-		const size_t EXIF_BLOCK_SIZE = xif.ImageVec[EXIF_START_POS - 2] << 8 | xif.ImageVec[EXIF_START_POS - 1];
-		xif.ImageVec.erase(xif.ImageVec.begin(), xif.ImageVec.begin() + EXIF_BLOCK_SIZE - 2);
+		const size_t EXIF_BLOCK_SIZE = ImageVec[EXIF_START_POS - 2] << 8 | ImageVec[EXIF_START_POS - 1];
+		ImageVec.erase(ImageVec.begin(), ImageVec.begin() + EXIF_BLOCK_SIZE - 2);
 	}
 
-	// ^ Any jpg embedded thumbnail should have now been removed.
+	// ^ Any JPG embedded thumbnail should have now been removed.
 
 	// Signature for Define Quantization Table(s) 
 	const auto DQT_SIG = { 0xFF, 0xDB };
 
 	// Find location in vector "ImageVec" of first DQT index location of the image file.
-	const size_t DQT_POS = search(xif.ImageVec.begin(), xif.ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - xif.ImageVec.begin();
+	const size_t DQT_POS = search(ImageVec.begin(), ImageVec.end(), DQT_SIG.begin(), DQT_SIG.end()) - ImageVec.begin();
 
 	// Erase the first n bytes of the JPG header before this DQT position. We will replace the erased header with the contents of vector "ProfileVec".
-	xif.ImageVec.erase(xif.ImageVec.begin(), xif.ImageVec.begin() + DQT_POS);
+	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + DQT_POS);
 
 	int
 		Bits = 16,				// Variable used with the "updateValue" function.
-		Profile_Header_Size_Field_Index = 22,	// "ProfileVec" first index location for the 2 byte iCC Profile (header) length field, of the jpg image.
-		Profile_Main_Size_Field_Index = 38;	// "ProfileVec" second index location for the 4 byte iCC Profile (main) length field, of the jpg image (only 2 bytes used).
+		Profile_Header_Size_Field_Index = 22,	// "ProfileVec" first index location for the 2 byte JPG iCC Profile header length field.
+		Profile_Main_Size_Field_Index = 38;	// "ProfileVec" second index location for the 4 byte main iCC Profile length field (only 2 bytes used).
 
 	const size_t
-		VECTOR_SIZE = xif.ProfileVec.size() - Profile_Header_Size_Field_Index;	// Get updated size for vector "ProfileVec" after adding user's data file.
+		VECTOR_SIZE = ProfileVec.size() - Profile_Header_Size_Field_Index;	// Get updated size for vector "ProfileVec" after adding user's data file.
 
-	// Update size of the first length field of the iCC Profile.
-	update->Value(xif.ProfileVec, Profile_Header_Size_Field_Index, VECTOR_SIZE, Bits, true);
+	// Update size of the first length field of the JPG iCC Profile header.
+	update->Value(ProfileVec, Profile_Header_Size_Field_Index, VECTOR_SIZE, Bits, true);
 
 	Bits += 16; // 32
 
-	// Update size of the second (main) length field of the iCC Profile (length always 16 bytes less than the first).
-	update->Value(xif.ProfileVec, Profile_Main_Size_Field_Index, VECTOR_SIZE - 16, Bits, true);
+	// Update size of the second length field of the main iCC Profile (length always 16 bytes less than the first).
+	update->Value(ProfileVec, Profile_Main_Size_Field_Index, VECTOR_SIZE - 16, Bits, true);
 
 	// If file is ZIP, adjust ZIP file offsets as their location has now changed.
 	if (ZIP_CHECK == ZIP_SIG) {
-		fixZipOffset(xif);
+		const std::string	// Header ID's
+			START_CENTRAL_DIR_SIG = "PK\x01\x02",
+			END_CENTRAL_DIR_SIG = "PK\x05\x06",
+			ZIP_SIG = "PK\x03\x04";
+
+		// Search vector to get index locations for the "Start Central Directory" & "End Central Directory".
+		const size_t
+			START_CENTRAL_DIR_INDEX = search(ProfileVec.begin() + DATA_FILE_LOCATION, ProfileVec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - ProfileVec.begin(),
+			END_CENTRAL_DIR_INDEX = search(ProfileVec.begin() + START_CENTRAL_DIR_INDEX, ProfileVec.end(), END_CENTRAL_DIR_SIG.begin(), END_CENTRAL_DIR_SIG.end()) - ProfileVec.begin();
+
+		size_t
+			Zip_Records_Index = END_CENTRAL_DIR_INDEX + 11,			// Index location for ZIP file records value.
+			End_Central_Dir_Start_Index = END_CENTRAL_DIR_INDEX + 19,	// Index location for End Central Start offset.
+			Central_Local_Dir_Index = START_CENTRAL_DIR_INDEX - 1,		// Initialise variable to just before Start Central index location.
+			New_Offset = DATA_FILE_LOCATION - 1,				// Initialise variable to near location of ZIP file.
+			Zip_Records = (ProfileVec[Zip_Records_Index] << 8) | ProfileVec[Zip_Records_Index - 1];	// Get ZIP file records value from index location within vector.
+
+		// Starting from the last IDAT chunk, search for ZIP file record offsets and update them to their new offset location.
+		while (Zip_Records--) {
+			New_Offset = search(ProfileVec.begin() + New_Offset + 1, ProfileVec.end(), ZIP_SIG.begin(), ZIP_SIG.end()) - ProfileVec.begin(),
+				Central_Local_Dir_Index = 45 + search(ProfileVec.begin() + Central_Local_Dir_Index, ProfileVec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - ProfileVec.begin();
+			update->Value(ProfileVec, Central_Local_Dir_Index, New_Offset, 32, false);
+		}
+
+		// Write updated "Start Central Directory" offset into End Central Directory's "Start Central Directory" index location within vector.
+		update->Value(ProfileVec, End_Central_Dir_Start_Index, START_CENTRAL_DIR_INDEX, 32, false);
 	}
 
 	// Insert contents of vector "ProfileVec" into vector "ImageVec", combining the iCC Profile and user's data file with the JPG image.	
-	xif.ImageVec.insert(xif.ImageVec.begin(), xif.ProfileVec.begin(), xif.ProfileVec.end());
+	ImageVec.insert(ImageVec.begin(), ProfileVec.begin(), ProfileVec.end());
 
-	xif.Data_Name = "xif_img.jpg";
+	const std::string EMBEDDED_IMAGE_NAME = "xif_img.jpg";
 
-	writeOutFile(xif);
-}
-
-void fixZipOffset(xifStruct& xif) {
-
-	const std::string	// Header ID's
-		START_CENTRAL_DIR_SIG = "PK\x01\x02",
-		END_CENTRAL_DIR_SIG = "PK\x05\x06",
-		ZIP_SIG = "PK\x03\x04";
-
-	// Search vector to get index locations for the "Start Central Directory" & "End Central Directory".
-	const size_t
-		START_CENTRAL_DIR_INDEX = search(xif.ProfileVec.begin() + xif.DATA_FILE_LOCATION, xif.ProfileVec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - xif.ProfileVec.begin(),
-		END_CENTRAL_DIR_INDEX = search(xif.ProfileVec.begin() + START_CENTRAL_DIR_INDEX, xif.ProfileVec.end(), END_CENTRAL_DIR_SIG.begin(), END_CENTRAL_DIR_SIG.end()) - xif.ProfileVec.begin();
-
-	size_t
-		Zip_Records_Index = END_CENTRAL_DIR_INDEX + 11,			// Index location for ZIP file records value.
-		End_Central_Dir_Start_Index = END_CENTRAL_DIR_INDEX + 19,	// Index location for End Central Start offset.
-		Central_Local_Dir_Index = START_CENTRAL_DIR_INDEX - 1,		// Initialise variable to just before Start Central index location.
-		New_Offset = xif.DATA_FILE_LOCATION - 1,			// Initialise variable to near location of ZIP file.
-		Zip_Records = (xif.ProfileVec[Zip_Records_Index] << 8) | xif.ProfileVec[Zip_Records_Index - 1];	// Get ZIP file records value from index location within vector.
-
-	// Starting from the last IDAT chunk, search for ZIP file record offsets and update them to their new offset location.
-	while (Zip_Records--) {
-		New_Offset = search(xif.ProfileVec.begin() + New_Offset + 1, xif.ProfileVec.end(), ZIP_SIG.begin(), ZIP_SIG.end()) - xif.ProfileVec.begin(),
-		Central_Local_Dir_Index = 45 + search(xif.ProfileVec.begin() + Central_Local_Dir_Index, xif.ProfileVec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - xif.ProfileVec.begin();
-		update->Value(xif.ProfileVec, Central_Local_Dir_Index, New_Offset, 32, false);
-	}
-
-	// Write updated "Start Central Directory" offset into End Central Directory's "Start Central Directory" index location within vector.
-	update->Value(xif.ProfileVec, End_Central_Dir_Start_Index, START_CENTRAL_DIR_INDEX, 32, false);
-}
-
-void writeOutFile(xifStruct& xif) {
-
-	std::ofstream writeFile(xif.Data_Name, std::ios::binary);
+	std::ofstream writeFile(EMBEDDED_IMAGE_NAME, std::ios::binary);
 
 	if (!writeFile) {
 		std::cerr << "\nWrite Error: Unable to write to file.\n\n";
@@ -255,10 +235,9 @@ void writeOutFile(xifStruct& xif) {
 	}
 
 	// Write out to disk image file embeddedd with user's data file.
-	writeFile.write((char*)&xif.ImageVec[0], xif.ImageVec.size());
-	std::cout << "\nCreated output file: \"" + xif.Data_Name + " " << xif.ImageVec.size() << " " << "Bytes\"\n"
+	writeFile.write((char*)&ImageVec[0], ImageVec.size());
+	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_NAME + " " << ImageVec.size() << " " << "Bytes\"\n"
 		<< "You can now tweet this image file.\n\n";
-
 }
 
 void displayInfo() {
@@ -266,34 +245,7 @@ void displayInfo() {
 	std::cout << R"(
 Xif v1.0 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
 
-Twitter will strip out metadata from a JPG image file when posted on its platform.
-
-Xif is a command line tool that enables you to embed tiny files 
-(up to 10KB) into your JPG image which Twitter will preserve, so your data file travels with the image.
-
-To maximise the amount of data you can embed, it is recommended to compress (ZIP/RAR, etc) your file.
-
-The data file is stored within the iCC Profile of the JPG image file.
-
-Usage examples (Linux):
-
-$ ./xif  your_image.jpg  your_data_file.zip (or your_data_file.rar)
-
-Created output file: "xif_img.jpg 9156 Bytes"
-You can now tweet this image file.
----
-
-To get access to and extract your embedded data file for a ZIP or RAR embedded file under Linux desktop, just rename 
-the .jpg file extension to .zip, then click the file icon to open & extract the ZIP/RAR contents.
-
-For a RAR file under Linux, from a Linux terminal, you can just enter the command: $ unrar e xif_img.jpg
-
-For a embedded ZIP file under Windows. Rename the .jpg file extension to .zip. From a command console type the following command:
-
-PS C:\Demo> Expand-Archive .\xif_image.zip
-
-For a RAR file under Windows, you will need to use a program such as WinRar to extract your file from the image.
-
+https://github.com/CleasbyCode/xif
 
 )";
 }
