@@ -7,7 +7,7 @@ in which **Twitter** will retain, so that your data file ***"travels"*** with th
 
 To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***, etc) your file.  
 
-![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/F4TBIQSXYAAHqSc.jpg) 
+![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle.jpg) 
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
 
 *(If you want to embed more data into an image file for Twitter (up to 5MB) then please try [pdvzip](https://github.com/CleasbyCode/pdvzip)  (PNG only),  
