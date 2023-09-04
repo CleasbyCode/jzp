@@ -20,11 +20,8 @@ Your embedded file is stored within the ***iCC Profile*** of the ***JPG*** image
 
 ![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/icc_dem.png)  
 
-**Video Demos**  
+[***Video Demos***](https://youtu.be/SIMZe5Ix5Y8)
 
-* [***Linux Example (RAR File)***](https://youtu.be/b9vgvgdYdVo)
-* [***Windows Example (ZIP File)***](https://youtu.be/e6scfpxpCbY)
-  
 Compile and run the program under **Windows** or **Linux**  
 
 ## Usage (Linux Example)
