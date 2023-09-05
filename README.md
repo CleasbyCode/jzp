@@ -5,7 +5,7 @@
 **xif** is a simple command-line tool that will insert small files (up 10KB) into a ***JPG*** image file,  
 in which **Twitter** will retain, so that your data file ***"travels"*** with the image.
 
-To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***, etc) your file.  
+To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***) your file.  
 
 ![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle.jpg)   
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
