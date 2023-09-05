@@ -25,7 +25,7 @@ Compile and run the program under **Windows** or **Linux**
 
 ## Usage (Linux Example)
 
-```c
+```bash
 
 $ g++ xif.cpp -s -o xif
 $
@@ -39,8 +39,6 @@ $ ./xif  image.jpg  sdxl_workflow_json.rar
  Created output file: "xif_img.jpg 9256 Bytes"
  You can now tweet this image.
 
-$
-
 ```
 ## Extracting Your Embedded File(s)
 
@@ -49,17 +47,16 @@ the ***.jpg*** file extension to ***.zip***, then click the file icon to open & 
 
 For just a ***RAR*** file under **Linux**, you don't need to rename the file extension. From a **Linux** terminal enter the following command:
 
-```c 
+```bash
  $ unrar e xif_img.jpg
 ```
 
 For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
 
-```c
+```bash
  PS C:\Demo> Expand-Archive  .\xif_img.zip .
 ```
 For a ***RAR*** file under **Windows**, you will need to use a program such as **WinRar** to extract your file from the image.
-
 
 My other programs you may find useful:-  
 
