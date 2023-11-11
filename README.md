@@ -30,7 +30,7 @@ Compile and run the program under **Windows** or **Linux**
 
 ```console
 
-$ g++ xif.cpp -s -o xif
+$ g++ xif.cpp -O2 -s -o xif
 $
 $ ./xif
 
@@ -40,7 +40,7 @@ Usage:  xif <jpg_image> <data_file>
 $ ./xif image.jpg sdxl_workflow_json.rar
 
  Created output file: "xif_img.jpg 9256 Bytes"
- You can now post this data-embedded image file to Twitter.
+ You can now post this data-embedded JPG image on Twitter.
 
 ```
 ## Extracting Your Embedded File(s)
