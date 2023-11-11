@@ -1,4 +1,4 @@
-// Xif v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
+// xif v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
 //
 // Compile program (Linux): $ g++ xif.cpp -O2 -s -o xif
 // Run program: ./xif
@@ -182,7 +182,7 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 	if (SOFP_POS == Image_Vec.size()) {
 		std::cerr << "\nImage Error: Image does not appear to be a Twitter encoded JPG file.\n\n"
-			"For compatibility reasons, please use a JPG image from Twitter.\n\nIf you still want to use this image with Xif, first post it to Twitter,\nclick the image to fully expand it, save image, then try again.\n\n";
+			"For compatibility reasons, please use a JPG image from Twitter.\n\nIf you still want to use this image with xif, first post it to Twitter,\nclick the image to fully expand it, save image, then try again.\n\n";
 
 		std::exit(EXIT_FAILURE);
 	}
@@ -247,13 +247,13 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	// Write out to disk image file embeddedd with user's data file.
 	write_file_fs.write((char*)&Image_Vec[0], Image_Vec.size());
 	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_NAME + " " << Image_Vec.size() << " " << "Bytes\"\n"
-		<< "You can now post this data-embedded image file to Twitter.\n\n";
+		<< "You can now post this data-embedded JPG image on Twitter.\n\n";
 }
 
 void Display_Info() {
 
 	std::cout << R"(
-Xif v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
+xif v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
 
 https://github.com/CleasbyCode/xif
 
