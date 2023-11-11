@@ -16,8 +16,6 @@ To maximise the amount of data you can embed, it's recommended to compress (***Z
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
 
 
-**xif** works on **Linux** and **Windows**.  
-
 Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image file.  
 
 ![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/icc_dem.png)  
