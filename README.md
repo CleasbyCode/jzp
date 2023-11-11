@@ -36,13 +36,13 @@ $ g++ xif.cpp -s -o xif
 $
 $ ./xif
 
-Usage:  xif  <jpg_image>  <data_file>
-        xif  --info
+Usage:  xif <jpg_image> <data_file>
+        xif --info
 
-$ ./xif  image.jpg  sdxl_workflow_json.rar
+$ ./xif image.jpg sdxl_workflow_json.rar
 
  Created output file: "xif_img.jpg 9256 Bytes"
- You can now tweet this image.
+ You can now post this data-embedded image file to Twitter.
 
 ```
 ## Extracting Your Embedded File(s)
