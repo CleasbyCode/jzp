@@ -2,7 +2,7 @@
 
 **Twitter** will strip out metadata from your image file when posted on its platform.
 
-**xif** is a simple command-line tool that will insert small files (up 10KB) into a ***JPG*** image file,  
+**xif** is a simple command-line tool that will insert small files (up to 10KB) into a ***JPG*** image file,  
 in which **Twitter** will preserve, so that your data file ***"travels"*** with the image.
 
 *For compatibility reasons, please use a JPG image from Twitter.*
