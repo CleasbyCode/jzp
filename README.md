@@ -7,10 +7,8 @@ in which **Twitter** will retain, so that your data file ***"travels"*** with th
 
 *For compatibility reasons, please use a JPG image from Twitter.*
 
-*If you want to use a JPG image not currently from Twitter, first post it to Twitter,
-click the image to fully expand it, save image.*  
-
-*You can now use this Twitter encoded JPG image with Xif.*
+*If you want to use a JPG image not currently from Twitter, first post it to Twitter,  
+click the image to fully expand it, save image. You can now use this Twitter encoded JPG image with Xif.*
 
 To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***) your data file.  
 
