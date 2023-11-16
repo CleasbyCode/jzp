@@ -55,7 +55,7 @@ For just a ***RAR*** file under **Linux**, you don't need to rename the file ext
 For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
 
 ```console
- PS C:\Demo> Expand-Archive  .\jzp_img.zip .
+ PS C:\Demo> Expand-Archive .\jzp_img.zip .
 ```
 For a ***RAR*** file under **Windows**, you will need to use a program such as **WinRar** to extract your file from the image.
 
