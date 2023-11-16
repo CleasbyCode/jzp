@@ -1,14 +1,14 @@
-# xif
+# jzp
 
 **Twitter** will strip out metadata from your image file when posted on its platform.
 
-**xif** is a simple command-line tool that will insert small files (up to 10KB) into a ***JPG*** image file,  
+**jzp** is a simple command-line tool that will insert small files (up to 10KB) into a ***JPG*** image file,  
 in which **Twitter** will preserve, so that your data file ***"travels"*** with the image.
 
 *For compatibility reasons, please use a JPG image from Twitter.*
 
 *If you want to use a JPG image not currently from Twitter, first post it to Twitter,  
-click the image to fully expand it, save the image. You can now use this Twitter encoded JPG image with xif.*
+click the image to fully expand it, save the image. You can now use this Twitter encoded JPG image with jzp.*
 
 To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***) your data file.  
 
@@ -28,16 +28,16 @@ Compile and run the program under **Windows** or **Linux**
 
 ```console
 
-$ g++ xif.cpp -O2 -s -o xif
+$ g++ jzp.cpp -O2 -s -o jzp
 $
-$ ./xif
+$ ./jzp
 
-Usage:  xif <jpg_image> <data_file>
-        xif --info
+Usage:  jzp <jpg_image> <data_file>
+        jzp --info
 
-$ ./xif image.jpg sdxl_workflow_json.rar
+$ ./jzp image.jpg sdxl_workflow_json.rar
 
- Created output file: "xif_img.jpg 9256 Bytes"
+ Created output file: "jzp_img.jpg 9256 Bytes"
  You can now post this data-embedded JPG image on Twitter.
 
 ```
@@ -49,13 +49,13 @@ the ***.jpg*** file extension to ***.zip***, then click the file icon to open & 
 For just a ***RAR*** file under **Linux**, you don't need to rename the file extension. From a **Linux** terminal enter the following command:
 
 ```console
- $ unrar e xif_img.jpg
+ $ unrar e jzp_img.jpg
 ```
 
 For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
 
 ```console
- PS C:\Demo> Expand-Archive  .\xif_img.zip .
+ PS C:\Demo> Expand-Archive  .\jzp_img.zip .
 ```
 For a ***RAR*** file under **Windows**, you will need to use a program such as **WinRar** to extract your file from the image.
 
