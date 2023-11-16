@@ -12,7 +12,7 @@ click the image to fully expand it, save the image. You can now use this Twitter
 
 To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***) your data file.  
 
-![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle.jpg)   
+![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle1.jpg)   
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
 
 
