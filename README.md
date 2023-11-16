@@ -32,8 +32,8 @@ $ g++ jzp.cpp -O2 -s -o jzp
 $
 $ ./jzp
 
-Usage:  jzp <jpg_image> <data_file>
-        jzp --info
+Usage: jzp <jpg_image> <data_file>
+       jzp --info
 
 $ ./jzp image.jpg sdxl_workflow_json.rar
 
