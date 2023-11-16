@@ -1,20 +1,19 @@
 # jzp
 
-**Twitter** will strip out metadata from your image file when posted on its platform.
+When posted on its platform, **Twitter** will remove the metadata from your image file.
 
 **jzp** is a simple command-line tool that will insert small files (up to 10KB) into a ***JPG*** image file,  
-in which **Twitter** will preserve, so that your data file ***"travels"*** with the image.
+which will not be removed by **Twitter**. Your embedded data file ***"travels"*** with the image.
 
 *For compatibility reasons, please use a JPG image from Twitter.*
 
 *(If you want to use a JPG image not currently from Twitter, first post it to Twitter,  
 click the image to fully expand it, save the image. You can now use this Twitter encoded JPG image with jzp.)*
 
-To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***) your data file.  
+To maximise the amount of data you can embed, it is recommended to compress (***ZIP/RAR***) your data file.  
 
 ![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle1.jpg)   
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
-
 
 Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image file.  
 
