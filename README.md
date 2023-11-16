@@ -52,7 +52,8 @@ For just a ***RAR*** file under **Linux**, you don't need to rename the file ext
  $ unrar e jzp_img.jpg
 ```
 
-For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***. From a console type the following command:
+For an embedded ***ZIP*** file under **Windows**, rename the ***.jpg*** file extension to ***.zip***.  
+From a console type the following command:
 
 ```console
  PS C:\Demo> Expand-Archive .\jzp_img.zip .
