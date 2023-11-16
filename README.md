@@ -7,8 +7,8 @@ in which **Twitter** will preserve, so that your data file ***"travels"*** with 
 
 *For compatibility reasons, please use a JPG image from Twitter.*
 
-*If you want to use a JPG image not currently from Twitter, first post it to Twitter,  
-click the image to fully expand it, save the image. You can now use this Twitter encoded JPG image with jzp.*
+*(If you want to use a JPG image not currently from Twitter, first post it to Twitter,  
+click the image to fully expand it, save the image. You can now use this Twitter encoded JPG image with jzp.)*
 
 To maximise the amount of data you can embed, it's recommended to compress (***ZIP/RAR***) your data file.  
 
@@ -43,8 +43,8 @@ $ ./jzp image.jpg sdxl_workflow_json.rar
 ```
 ## Extracting Your Embedded File(s)
 
-To get access to and extract your data file for a ***ZIP*** or ***RAR*** embedded file under **Linux Desktop**, just rename 
-the ***.jpg*** file extension to ***.zip***, then click the file icon to open & extract the ***ZIP/RAR*** contents.
+To get access to and extract your data file for a ***ZIP*** or ***RAR*** embedded file with a **Linux desktop**,  
+just rename the ***.jpg*** file extension to ***.zip***, then click the file icon to open & extract the ***ZIP/RAR*** contents.
 
 For just a ***RAR*** file under **Linux**, you don't need to rename the file extension. From a **Linux** terminal enter the following command:
 
