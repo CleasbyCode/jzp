@@ -18,7 +18,7 @@ To maximise the amount of data you can embed, it's recommended to compress (***Z
 
 Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image file.  
 
-![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/icc_dem.png)  
+![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/jzp_icc.png)  
 
 [***Video Demo***](https://youtu.be/SIMZe5Ix5Y8)
 
