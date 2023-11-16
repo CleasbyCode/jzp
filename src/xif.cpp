@@ -1,7 +1,7 @@
-// xif v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
+// jzp v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
 //
-// Compile program (Linux): $ g++ xif.cpp -O2 -s -o xif
-// Run program: ./xif
+// Compile program (Linux): $ g++ jzp.cpp -O2 -s -o jzp
+// Run program: ./jzp
 
 #include <algorithm>
 #include <fstream>
@@ -12,24 +12,15 @@
 
 typedef unsigned char BYTE;
 
-// Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
-class Value_Updater {
-public:
-	void Value(std::vector<BYTE>& vec, size_t value_insert_index, const size_t VALUE, int bits, bool isBig) {
-		if (isBig) { // (Big-endian format)
-			while (bits) vec[value_insert_index++] = (VALUE >> (bits -= 8)) & 0xff;
-		}
-		else { // For ZIP (Little-endian format)
-			while (bits) vec[value_insert_index--] = (VALUE >> (bits -= 8)) & 0xff;
-		}
-	}
-} *update;
+void
+	// Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
+	Value_Updater(std::vector<BYTE>&, size_t, const size_t&, uint_fast8_t, bool),
 
-// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
-void Embed_File(const std::string&, const std::string&);
+	// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
+	Embed_File(const std::string&, const std::string&),
 
-// Display program information
-void Display_Info();
+	// Display program information
+	Display_Info();
 
 int main(int argc, char** argv) {
 
@@ -37,14 +28,14 @@ int main(int argc, char** argv) {
 		Display_Info();
 	}
 	else if (argc > 2 && argc < 4) {
-		const std::string 
+		const std::string
 			IMAGE_NAME = argv[1],
 			DATA_NAME = argv[2];
-		
+
 		Embed_File(IMAGE_NAME, DATA_NAME);
 	}
 	else {
-		std::cout << "\nUsage: xif <jpg_image> <data_file>\n\t\bxif --info\n\n";
+		std::cout << "\nUsage: jzp <jpg_image> <data_file>\n\t\bjzp --info\n\n";
 	}
 	return 0;
 }
@@ -96,27 +87,25 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 		0xB6, 0xC4, 0x63, 0x75, 0x72, 0x76, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00,
 		0x01, 0x07, 0x02, 0xB5, 0x05, 0x6B, 0x09, 0x36, 0x0E, 0x50, 0x14, 0xB1, 0x1C, 0x80, 0x25, 0xC8,
 		0x30, 0xA1, 0x3D, 0x19, 0x4B, 0x40, 0x5B, 0x27, 0x6C, 0xDB, 0x80, 0x6B, 0x95, 0xE3, 0xAD, 0x50,
-		0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x20, 0x78, 0x69, 0x66, 0x20
+		0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x20, 0x6A, 0x7A, 0x70, 0x20
 	},
-
-	// Read-in and store JPG image file into vector "Image_Vec".
-	Image_Vec((std::istreambuf_iterator<char>(read_image_fs)), std::istreambuf_iterator<char>());
+		// Read-in and store JPG image file into vector "Image_Vec".
+		Image_Vec((std::istreambuf_iterator<char>(read_image_fs)), std::istreambuf_iterator<char>());
 
 	// Read-in and store user's data file into vector "Profile_Vec" at the end of the basic profile.
 	Profile_Vec.insert(Profile_Vec.end(), std::istreambuf_iterator<char>(read_data_fs), std::istreambuf_iterator<char>());
 
-	// Data file size limit for Twitter is 10KB. We also have to take off 443 bytes for the basic iCC Profile, 
-	// which leaves just 9,797 bytes for the embedded file. 
-	// To maximise the amount of embedded data, compressing your data file is recommended (ZIP/RAR, etc).
-	const size_t MAX_FILE_SIZE = 9797;
+	// Data file size limit for JPG / Twitter is 10KB. We also have to take off 443 bytes for the basic iCC Profile, 
+	// which leaves use just 9,797 bytes for the embedded file. Compressing your data file is recommended (ZIP/RAR, etc).
+	const uint_fast16_t
+		MAX_FILE_SIZE = 9797,
+		DATA_FILE_LOCATION = 443;
 
 	if (Profile_Vec.size() > MAX_FILE_SIZE) {
 		// File size check failure, display error message and exit program.
 		std::cerr << "\nFile Size Error: Your data file size must not exceed 10KB.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
-
-	const int DATA_FILE_LOCATION = 443;
 
 	const std::string
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
@@ -141,19 +130,19 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 	// Check for a iCC Profile and delete all content before the beginning of the profile. This removes any embedded thumbnail image before profile.
 	// The actual profile will be deleted later.
-	const size_t ICC_PROFILE_POS = search(Image_Vec.begin(), Image_Vec.end(), ICC_PROFILE_SIG.begin(), ICC_PROFILE_SIG.end()) - Image_Vec.begin();
+	const size_t ICC_PROFILE_POS = std::search(Image_Vec.begin(), Image_Vec.end(), ICC_PROFILE_SIG.begin(), ICC_PROFILE_SIG.end()) - Image_Vec.begin();
 	if (Image_Vec.size() > ICC_PROFILE_POS) {
 		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + ICC_PROFILE_POS);
 	}
 
 	// If no profile found, search for and Exif block (look for end signature "xpacket end") and remove the block.
-	const size_t EXIF_END_POS = search(Image_Vec.begin(), Image_Vec.end(), EXIF_END_SIG.begin(), EXIF_END_SIG.end()) - Image_Vec.begin();
+	const size_t EXIF_END_POS = std::search(Image_Vec.begin(), Image_Vec.end(), EXIF_END_SIG.begin(), EXIF_END_SIG.end()) - Image_Vec.begin();
 	if (Image_Vec.size() > EXIF_END_POS) {
 		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + (EXIF_END_POS + 17));
 	}
 
 	// Remove and Exif block that has no "xpacket end" signature.
-	const size_t EXIF_START_POS = search(Image_Vec.begin(), Image_Vec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - Image_Vec.begin();
+	const size_t EXIF_START_POS = std::search(Image_Vec.begin(), Image_Vec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - Image_Vec.begin();
 	if (Image_Vec.size() > EXIF_START_POS) {
 		// get size of Exif block
 		const size_t EXIF_BLOCK_SIZE = Image_Vec[EXIF_START_POS - 2] << 8 | Image_Vec[EXIF_START_POS - 1];
@@ -166,7 +155,7 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	const auto DQT_SIG = { 0xFF, 0xDB };
 
 	// Find location in vector "Image_Vec" of first DQT index location of the image file.
-	const size_t DQT_POS = search(Image_Vec.begin(), Image_Vec.end(), DQT_SIG.begin(), DQT_SIG.end()) - Image_Vec.begin();
+	const size_t DQT_POS = std::search(Image_Vec.begin(), Image_Vec.end(), DQT_SIG.begin(), DQT_SIG.end()) - Image_Vec.begin();
 
 	// Erase the first n bytes of the JPG header before this DQT position. We will replace the erased header with the contents of vector "Profile_Vec".
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DQT_POS);
@@ -178,16 +167,16 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	const auto SOFP_SIG = { 0xFF, 0xC2 };
 
 	// Find location in vector "Image_Vec" of the SOFP index location  within the image file.
-	const size_t SOFP_POS = search(Image_Vec.begin(), Image_Vec.end(), SOFP_SIG.begin(), SOFP_SIG.end()) - Image_Vec.begin();
+	const size_t SOFP_POS = std::search(Image_Vec.begin(), Image_Vec.end(), SOFP_SIG.begin(), SOFP_SIG.end()) - Image_Vec.begin();
 
 	if (SOFP_POS == Image_Vec.size()) {
 		std::cerr << "\nImage Error: Image does not appear to be a Twitter encoded JPG file.\n\n"
-			"For compatibility reasons, please use a JPG image from Twitter.\n\nIf you still want to use this image with xif, first post it to Twitter,\nclick the image to fully expand it, save image, then try again.\n\n";
+			"For compatibility reasons, please use a JPG image from Twitter.\n\nIf you still want to use this image with jzp, first post it to Twitter,\nclick the image to fully expand it, save image, then try again.\n\n";
 
 		std::exit(EXIT_FAILURE);
 	}
 
-	uint8_t
+	uint_fast8_t
 		bits = 16,				// Variable used with the "Update_Value" function.
 		profile_header_size_index = 22,		// "Profile_Vec" first index location for the 2 byte JPG iCC Profile header length field.
 		profile_main_size_index = 38;		// "Profile_Vec" second index location for the 4 byte main iCC Profile length field (only 2 bytes used).
@@ -195,12 +184,12 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	const size_t VECTOR_SIZE = Profile_Vec.size() - profile_header_size_index;	// Get updated size for vector "Profile_Vec" after adding user's data file.
 
 	// Update size of the first length field of the JPG iCC Profile header.
-	update->Value(Profile_Vec, profile_header_size_index, VECTOR_SIZE, bits, true);
+	Value_Updater(Profile_Vec, profile_header_size_index, VECTOR_SIZE, bits, true);
 
 	bits += 16; // 32
 
 	// Update size of the second length field of the main iCC Profile (length always 16 bytes less than the first).
-	update->Value(Profile_Vec, profile_main_size_index, VECTOR_SIZE - 16, bits, true);
+	Value_Updater(Profile_Vec, profile_main_size_index, VECTOR_SIZE - 16, bits, true);
 
 	// If file is ZIP, adjust ZIP file offsets as their location has now changed.
 	if (ZIP_CHECK == ZIP_SIG) {
@@ -211,8 +200,8 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 		// Search vector to get index locations for the "Start Central Directory" & "End Central Directory".
 		const size_t
-			START_CENTRAL_DIR_INDEX = search(Profile_Vec.begin() + DATA_FILE_LOCATION, Profile_Vec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - Profile_Vec.begin(),
-			END_CENTRAL_DIR_INDEX = search(Profile_Vec.begin() + START_CENTRAL_DIR_INDEX, Profile_Vec.end(), END_CENTRAL_DIR_SIG.begin(), END_CENTRAL_DIR_SIG.end()) - Profile_Vec.begin();
+			START_CENTRAL_DIR_INDEX = std::search(Profile_Vec.begin() + DATA_FILE_LOCATION, Profile_Vec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - Profile_Vec.begin(),
+			END_CENTRAL_DIR_INDEX = std::search(Profile_Vec.begin() + START_CENTRAL_DIR_INDEX, Profile_Vec.end(), END_CENTRAL_DIR_SIG.begin(), END_CENTRAL_DIR_SIG.end()) - Profile_Vec.begin();
 
 		size_t
 			zip_records_index = END_CENTRAL_DIR_INDEX + 11,		// Index location for ZIP file records value.
@@ -223,19 +212,19 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 		// Starting from the last IDAT chunk, search for ZIP file record offsets and update them to their new offset location.
 		while (zip_records--) {
-			new_offset = search(Profile_Vec.begin() + new_offset + 1, Profile_Vec.end(), ZIP_SIG.begin(), ZIP_SIG.end()) - Profile_Vec.begin(),
-			central_local_index = 45 + search(Profile_Vec.begin() + central_local_index, Profile_Vec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - Profile_Vec.begin();
-			update->Value(Profile_Vec, central_local_index, new_offset, 32, false);
+			new_offset = std::search(Profile_Vec.begin() + new_offset + 1, Profile_Vec.end(), ZIP_SIG.begin(), ZIP_SIG.end()) - Profile_Vec.begin(),
+			central_local_index = 45 + std::search(Profile_Vec.begin() + central_local_index, Profile_Vec.end(), START_CENTRAL_DIR_SIG.begin(), START_CENTRAL_DIR_SIG.end()) - Profile_Vec.begin();
+			Value_Updater(Profile_Vec, central_local_index, new_offset, 32, false);
 		}
 
 		// Write updated "Start Central Directory" offset into End Central Directory's "Start Central Directory" index location within vector.
-		update->Value(Profile_Vec, end_central_start_index, START_CENTRAL_DIR_INDEX, 32, false);
+		Value_Updater(Profile_Vec, end_central_start_index, START_CENTRAL_DIR_INDEX, 32, false);
 	}
 
 	// Insert contents of vector "Profile_Vec" into vector "Image_Vec", combining the iCC Profile and user's data file with the JPG image.	
 	Image_Vec.insert(Image_Vec.begin(), Profile_Vec.begin(), Profile_Vec.end());
 
-	const std::string EMBEDDED_IMAGE_NAME = "xif_img.jpg";
+	const std::string EMBEDDED_IMAGE_NAME = "jzp_img.jpg";
 
 	std::ofstream write_file_fs(EMBEDDED_IMAGE_NAME, std::ios::binary);
 
@@ -247,15 +236,25 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	// Write out to disk image file embeddedd with user's data file.
 	write_file_fs.write((char*)&Image_Vec[0], Image_Vec.size());
 	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_NAME + " " << Image_Vec.size() << " " << "Bytes\"\n"
-		<< "You can now post this data-embedded JPG image on Twitter.\n\n";
+		<< "You can now post this data-embedded image file to Twitter.\n\n";
+}
+
+void Value_Updater(std::vector<BYTE>& vec, size_t value_insert_index, const size_t& VALUE, uint_fast8_t bits, bool isBig) {
+
+	if (isBig) {
+		while (bits) vec[value_insert_index++] = (VALUE >> (bits -= 8)) & 0xff;
+	}
+	else {
+		while (bits) vec[value_insert_index--] = (VALUE >> (bits -= 8)) & 0xff;
+	}
 }
 
 void Display_Info() {
 
 	std::cout << R"(
-xif v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
+jzp v1.1 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
 
-https://github.com/CleasbyCode/xif
+https://github.com/CleasbyCode/jzp
 
 )";
 }
