@@ -15,7 +15,7 @@ To maximise the amount of data you can embed, it is recommended to compress (***
 ![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle1.jpg)   
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
 
-Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image file.  
+Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image.  
 
 ![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/jzp_icc.png)  
 
