@@ -1,6 +1,6 @@
 # jzp
 
-When posted on its platform, **Twitter** will remove the metadata from your image file.
+When posted on its platform, **Twitter** will remove the metadata from your image file(s).
 
 **jzp** is a command-line tool used to insert small files (up to 10KB) into a ***JPG*** image,  
 that will not be removed by **Twitter**. Your embedded data file ***"travels"*** with the image.
