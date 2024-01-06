@@ -13,14 +13,14 @@
 typedef unsigned char BYTE;
 
 void
-	// Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
-	Value_Updater(std::vector<BYTE>&, size_t, const size_t&, uint_fast8_t, bool),
+// Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
+Value_Updater(std::vector<BYTE>&, size_t, const size_t&, uint_fast8_t, bool),
 
-	// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
-	Embed_File(const std::string&, const std::string&),
+// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
+Embed_File(const std::string&, const std::string&),
 
-	// Display program information
-	Display_Info();
+// Display program information
+Display_Info();
 
 int main(int argc, char** argv) {
 
@@ -32,10 +32,18 @@ int main(int argc, char** argv) {
 			IMAGE_NAME = argv[1],
 			DATA_NAME = argv[2];
 
+		const std::string GET_JPG_EXTENSION = IMAGE_NAME.length() > 3 ? IMAGE_NAME.substr(IMAGE_NAME.length() - 4) : IMAGE_NAME;
+
+		if (GET_JPG_EXTENSION != ".jpg" && GET_JPG_EXTENSION != "jpeg" && GET_JPG_EXTENSION != "jiff") {
+			// Open file failure, display relevant error message and exit program.
+			std::cerr << ("\nImage File Error: Image file does not contain a valid extension.\n\n");
+			std::exit(EXIT_FAILURE);
+		}
+
 		Embed_File(IMAGE_NAME, DATA_NAME);
 	}
 	else {
-		std::cout << "\nUsage: jzp <jpg_image> <data_file>\n\t\bjzp --info\n\n";
+		std::cout << "\nUsage: jzp <cover_image> <data_file>\n\t\bjzp --info\n\n";
 	}
 	return 0;
 }
@@ -49,11 +57,8 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	if (!read_image_fs || !read_data_fs) {
 		// Open file failure, display relevant error message and exit program.
 
-		const std::string READ_ERR_MSG = "\nRead Error: Unable to open/read file: ";
-		const std::string ERR_MSG = !read_image_fs ? READ_ERR_MSG + "\"" + IMAGE_NAME + "\"\n\n" : READ_ERR_MSG + "\"" + DATA_NAME + "\"\n\n";
-
-		std::cerr << ERR_MSG;
-
+		std::cerr << "\nRead File Error: Unable to open file: "
+			<< (!read_image_fs ? "\"" + IMAGE_NAME + "\"\n\n" : "\"" + DATA_NAME + "\"\n\n");
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -89,6 +94,7 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 		0x30, 0xA1, 0x3D, 0x19, 0x4B, 0x40, 0x5B, 0x27, 0x6C, 0xDB, 0x80, 0x6B, 0x95, 0xE3, 0xAD, 0x50,
 		0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x20, 0x6A, 0x7A, 0x70, 0x20
 	},
+
 		// Read-in and store JPG image file into vector "Image_Vec".
 		Image_Vec((std::istreambuf_iterator<char>(read_image_fs)), std::istreambuf_iterator<char>());
 
@@ -99,11 +105,12 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	// which leaves use just 9,797 bytes for the embedded file. Compressing your data file is recommended (ZIP/RAR, etc).
 	const uint_fast16_t
 		MAX_FILE_SIZE = 9797,
+		MIN_IMAGE_SIZE = 134,
 		DATA_FILE_LOCATION = 443;
 
-	if (Profile_Vec.size() > MAX_FILE_SIZE) {
+	if (Profile_Vec.size() > MAX_FILE_SIZE || MIN_IMAGE_SIZE > Image_Vec.size()) {
 		// File size check failure, display error message and exit program.
-		std::cerr << "\nFile Size Error: Your data file size must not exceed 10KB.\n\n";
+		std::cerr << (Profile_Vec.size() > MAX_FILE_SIZE ? "\nFile Size Error: Your data file size exceeds maximum limit.\n\n" : "\nImage Size Error: Image file invalid. File too small.\n\n");
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -145,7 +152,7 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	const size_t EXIF_START_POS = std::search(Image_Vec.begin(), Image_Vec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - Image_Vec.begin();
 	if (Image_Vec.size() > EXIF_START_POS) {
 		// get size of Exif block
-		const uint_fast16_t EXIF_BLOCK_SIZE = Image_Vec[EXIF_START_POS - 2] << 8 | Image_Vec[EXIF_START_POS - 1];
+		const size_t EXIF_BLOCK_SIZE = Image_Vec[EXIF_START_POS - 2] << 8 | Image_Vec[EXIF_START_POS - 1];
 		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + EXIF_BLOCK_SIZE - 2);
 	}
 
@@ -172,7 +179,6 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	if (SOFP_POS == Image_Vec.size()) {
 		std::cerr << "\nImage Error: Image does not appear to be a Twitter encoded JPG file.\n\n"
 			"For compatibility reasons, please use a JPG image from Twitter.\n\nIf you still want to use this image with jzp, first post it to Twitter,\nclick the image to fully expand it, save image, then try again.\n\n";
-
 		std::exit(EXIT_FAILURE);
 	}
 
