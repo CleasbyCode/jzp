@@ -31,13 +31,13 @@ $ g++ jzp.cpp -O2 -s -o jzp
 $
 $ ./jzp
 
-Usage: jzp <jpg_image> <data_file>
+Usage: jzp <cover_image> <data_file>
        jzp --info
 
 $ ./jzp image.jpg sdxl_workflow_json.rar
 
  Created output file: "jzp_img.jpg 9256 Bytes"
- You can now post this data-embedded JPG image on Twitter.
+ You can now post this data-embedded image file on Twitter.
 
 ```
 ## Extracting Your Embedded File(s)
