@@ -6,21 +6,18 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <cstdint>
 #include <string>
 #include <vector>
 
-typedef unsigned char BYTE;
+typedef unsigned char Byte;
 
 void
-// Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
-Value_Updater(std::vector<BYTE>&, size_t, const size_t&, uint_fast8_t, bool),
-
-// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
-Embed_File(const std::string&, const std::string&),
-
-// Display program information
-Display_Info();
+	// Update values, such as block size, file sizes and other values and write them into the relevant vector index locations. Overwrites previous values.
+	Value_Updater(std::vector<Byte>&, size_t, const size_t&, int, bool),
+	// Open user image & data file & proceed to embed user's data file & write out to disk embedded image. 
+	Embed_File(const std::string&, const std::string&),
+	// Display program information
+	Display_Info();
 
 int main(int argc, char** argv) {
 
@@ -51,20 +48,20 @@ int main(int argc, char** argv) {
 void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 	std::ifstream
-		read_image_fs(IMAGE_NAME, std::ios::binary),
-		read_data_fs(DATA_NAME, std::ios::binary);
+		image_ifs(IMAGE_NAME, std::ios::binary),
+		data_ifs(DATA_NAME, std::ios::binary);
 
-	if (!read_image_fs || !read_data_fs) {
+	if (!image_ifs || !data_ifs) {
 		// Open file failure, display relevant error message and exit program.
-
 		std::cerr << "\nRead File Error: Unable to open file: "
-			<< (!read_image_fs ? "\"" + IMAGE_NAME + "\"\n\n" : "\"" + DATA_NAME + "\"\n\n");
+			<< (!image_ifs ? "\"" + IMAGE_NAME + "\"\n\n" : "\"" + DATA_NAME + "\"\n\n");
+
 		std::exit(EXIT_FAILURE);
 	}
 
 	// The first 443 bytes of this vector contains the JPG header, iCC Profile header and the main iCC Profile.
 	// Data file will be inserted & stored at the end of this vector.
-	std::vector<BYTE>Profile_Vec = {
+	std::vector<Byte>Profile_Vec = {
 		0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01,
 		0x00, 0x01, 0x00, 0x00, 0xFF, 0xE2, 0x0E, 0x8C, 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46,
 		0x49, 0x4C, 0x45, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x6c, 0x63, 0x6d, 0x73, 0x02, 0x10,
@@ -96,14 +93,14 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	},
 
 		// Read-in and store JPG image file into vector "Image_Vec".
-		Image_Vec((std::istreambuf_iterator<char>(read_image_fs)), std::istreambuf_iterator<char>());
+		Image_Vec((std::istreambuf_iterator<char>(image_ifs)), std::istreambuf_iterator<char>());
 
 	// Read-in and store user's data file into vector "Profile_Vec" at the end of the basic profile.
-	Profile_Vec.insert(Profile_Vec.end(), std::istreambuf_iterator<char>(read_data_fs), std::istreambuf_iterator<char>());
+	Profile_Vec.insert(Profile_Vec.end(), std::istreambuf_iterator<char>(data_ifs), std::istreambuf_iterator<char>());
 
 	// Data file size limit for JPG / Twitter is 10KB. We also have to take off 443 bytes for the basic iCC Profile, 
 	// which leaves use just 9,797 bytes for the embedded file. Compressing your data file is recommended (ZIP/RAR, etc).
-	const uint_fast16_t
+	constexpr int
 		MAX_FILE_SIZE = 9797,
 		MIN_IMAGE_SIZE = 134,
 		DATA_FILE_LOCATION = 443;
@@ -118,7 +115,7 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 		JPG_SIG = "\xFF\xD8\xFF",	// JPG image signature. 
 		ZIP_SIG = "PK\x03\x04",		// ZIP file signature
 		JPG_CHECK{ Image_Vec.begin(), Image_Vec.begin() + JPG_SIG.length() },													// Get JPG image header from vector. 
-		ZIP_CHECK{ Profile_Vec.begin() + DATA_FILE_LOCATION, Profile_Vec.begin() + DATA_FILE_LOCATION + ZIP_SIG.length() };	// Get ZIP header from vector.
+		ZIP_CHECK{ Profile_Vec.begin() + DATA_FILE_LOCATION, Profile_Vec.begin() + DATA_FILE_LOCATION + ZIP_SIG.length() };		// Get ZIP header from vector.
 
 	// Make sure we are dealing with valid JPG image file.
 	if (JPG_CHECK != JPG_SIG) {
@@ -138,18 +135,21 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	// Check for a iCC Profile and delete all content before the beginning of the profile. This removes any embedded thumbnail image before profile.
 	// The actual profile will be deleted later.
 	const size_t ICC_PROFILE_POS = std::search(Image_Vec.begin(), Image_Vec.end(), ICC_PROFILE_SIG.begin(), ICC_PROFILE_SIG.end()) - Image_Vec.begin();
+	
 	if (Image_Vec.size() > ICC_PROFILE_POS) {
 		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + ICC_PROFILE_POS);
 	}
 
 	// If no profile found, search for and Exif block (look for end signature "xpacket end") and remove the block.
 	const size_t EXIF_END_POS = std::search(Image_Vec.begin(), Image_Vec.end(), EXIF_END_SIG.begin(), EXIF_END_SIG.end()) - Image_Vec.begin();
+	
 	if (Image_Vec.size() > EXIF_END_POS) {
 		Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + (EXIF_END_POS + 17));
 	}
 
 	// Remove and Exif block that has no "xpacket end" signature.
 	const size_t EXIF_START_POS = std::search(Image_Vec.begin(), Image_Vec.end(), EXIF_SIG.begin(), EXIF_SIG.end()) - Image_Vec.begin();
+	
 	if (Image_Vec.size() > EXIF_START_POS) {
 		// get size of Exif block
 		const size_t EXIF_BLOCK_SIZE = Image_Vec[EXIF_START_POS - 2] << 8 | Image_Vec[EXIF_START_POS - 1];
@@ -167,22 +167,7 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 	// Erase the first n bytes of the JPG header before this DQT position. We will replace the erased header with the contents of vector "Profile_Vec".
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DQT_POS);
 
-	// JPG Signature for Start-Of-Frame Progressive (SOFP) block. 
-	// Images saved/downloaded from Twitter always have this SOFP sig. 
-	// Twitter may not always preserve embedded data posted with JPG images not encodded with a SOFP block. 
-	// Always best to use a Twitter encoded JPG image.
-	const auto SOFP_SIG = { 0xFF, 0xC2 };
-
-	// Find location in vector "Image_Vec" of the SOFP index location  within the image file.
-	const size_t SOFP_POS = std::search(Image_Vec.begin(), Image_Vec.end(), SOFP_SIG.begin(), SOFP_SIG.end()) - Image_Vec.begin();
-
-	if (SOFP_POS == Image_Vec.size()) {
-		std::cerr << "\nImage Error: Image does not appear to be a Twitter encoded JPG file.\n\n"
-			"For compatibility reasons, please use a JPG image from Twitter.\n\nIf you still want to use this image with jzp, first post it to Twitter,\nclick the image to fully expand it, save image, then try again.\n\n";
-		std::exit(EXIT_FAILURE);
-	}
-
-	uint_fast8_t
+	int
 		bits = 16,				// Variable used with the "Update_Value" function.
 		profile_header_size_index = 22,		// "Profile_Vec" first index location for the 2 byte JPG iCC Profile header length field.
 		profile_main_size_index = 38;		// "Profile_Vec" second index location for the 4 byte main iCC Profile length field (only 2 bytes used).
@@ -232,20 +217,20 @@ void Embed_File(const std::string& IMAGE_NAME, const std::string& DATA_NAME) {
 
 	const std::string EMBEDDED_IMAGE_NAME = "jzp_img.jpg";
 
-	std::ofstream write_file_fs(EMBEDDED_IMAGE_NAME, std::ios::binary);
+	std::ofstream file_ofs(EMBEDDED_IMAGE_NAME, std::ios::binary);
 
-	if (!write_file_fs) {
+	if (!file_ofs) {
 		std::cerr << "\nWrite Error: Unable to write to file.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
 	// Write out to disk image file embeddedd with user's data file.
-	write_file_fs.write((char*)&Image_Vec[0], Image_Vec.size());
+	file_ofs.write((char*)&Image_Vec[0], Image_Vec.size());
 	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_NAME + " " << Image_Vec.size() << " " << "Bytes\"\n"
 		<< "You can now post this data-embedded image file to Twitter.\n\n";
 }
 
-void Value_Updater(std::vector<BYTE>& vec, size_t value_insert_index, const size_t& VALUE, uint_fast8_t bits, bool isBig) {
+void Value_Updater(std::vector<Byte>& vec, size_t value_insert_index, const size_t& VALUE, int bits, bool isBig) {
 
 	if (isBig) {
 		while (bits) vec[value_insert_index++] = (VALUE >> (bits -= 8)) & 0xff;
