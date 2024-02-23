@@ -5,10 +5,7 @@ When posted on its platform, **Twitter** will remove the metadata from your imag
 **jzp** is a command-line tool used to insert small files (up to 10KB) into a ***JPG*** image,  
 that will not be removed by **Twitter**. Your embedded data file ***"travels"*** with the image.
 
-*For compatibility reasons, please use a JPG image from Twitter.*
-
-*(If you want to use a JPG image not currently from Twitter, first post it to Twitter,  
-click the image to fully expand it, save the image. You can now use this Twitter encoded JPG image with jzp.)*
+*For compatibility reasons, I would recommend using JPG images saved from Twitter for your cover image.*
 
 To maximise the amount of data you can embed, it is recommended to compress (***ZIP/RAR***) your data file.  
 
