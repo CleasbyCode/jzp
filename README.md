@@ -16,8 +16,6 @@ Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image
 
 ![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/jzp_icc.png)  
 
-[***Video Demo***](https://youtu.be/SIMZe5Ix5Y8)
-
 Compile and run the program under **Windows** or **Linux**  
 
 ## Usage (Linux Example)
