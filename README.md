@@ -10,17 +10,13 @@ To maximise the amount of data you can embed, it is recommended to compress (***
 ![Demo Image_a](https://github.com/CleasbyCode/xif/blob/main/demo_image/bottle1.jpg)   
 ***[{Original image source}](https://comfyanonymous.github.io/ComfyUI_examples/sdxl/)***
 
-Your embedded file is stored within the ***ICC Profile*** of the ***JPG*** image.  
-
-![Demo Image_b](https://github.com/CleasbyCode/xif/blob/main/demo_image/jzp_icc.png)  
-
 Compile and run the program under **Windows** or **Linux**  
 
 ## Usage (Linux Example)
 
 ```console
 
-$ g++ jzp.cpp -O2 -s -o jzp
+$ g++ main.cpp -O2 -s -o jzp
 $
 $ ./jzp
 
@@ -30,7 +26,7 @@ Usage: jzp <cover_image> <data_file>
 $ ./jzp image.jpg sdxl_workflow_json.rar
 
  Created output file: "jzp_img.jpg 9256 Bytes"
- You can now post this data-embedded image file on Twitter.
+ You can now post this data-embedded image file on X/Twitter.
 
 ```
 ## Extracting Your Embedded File(s)
