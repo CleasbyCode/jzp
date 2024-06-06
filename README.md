@@ -26,6 +26,7 @@ Usage: jzp <cover_image> <data_file>
 $ ./jzp image.jpg sdxl_workflow_json.rar
 
  Created output file: "jzp_img.jpg 9256 Bytes"
+
  You can now post this data-embedded image file on X/Twitter.
 
 ```
