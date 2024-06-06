@@ -2,9 +2,9 @@
 void adjustZipOffsets(std::vector<uint_fast8_t>& Vec) {
  
 	constexpr uint_fast8_t 
-		ZIP_SIG[] 			{0x50, 0x4B, 0x03, 0x04},
-		START_CENTRAL_DIR_SIG[] 	{0x50, 0x4B, 0x01, 0x02},
-		END_CENTRAL_DIR_SIG[] 		{0x50, 0x4B, 0x05, 0x06};
+		ZIP_SIG[] 		{ 0x50, 0x4B, 0x03, 0x04 },
+		START_CENTRAL_DIR_SIG[] { 0x50, 0x4B, 0x01, 0x02 },
+		END_CENTRAL_DIR_SIG[] 	{ 0x50, 0x4B, 0x05, 0x06 };
 
 	const uint_fast32_t
 		START_CENTRAL_DIR_INDEX = searchFunc(Vec, 0, 0, START_CENTRAL_DIR_SIG),
