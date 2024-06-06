@@ -1,4 +1,4 @@
-// jzp v1.2 for Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
+// jzp v1.2 for X/Twitter. Created by Nicholas Cleasby (@CleasbyCode) 14/07/2023.
 //
 // Compile program (Linux): $ g++ main.cpp -O2 -s -o jzp
 // Run program: ./jzp
