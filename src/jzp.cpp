@@ -134,5 +134,5 @@ void startJzp(const std::string& IMAGE_FILENAME, const std::string& DATA_FILENAM
 	file_ofs.write((char*)&Image_Vec[0], EMBEDDED_IMAGE_SIZE);
 				 
 	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_NAME + " " << EMBEDDED_IMAGE_SIZE << " Bytes\"\n\n"
-		<< "You can now post this data-embedded image file to X/Twitter.\n\n";
+		<< "You can now post this data-embedded image file on X/Twitter.\n\n";
 }
